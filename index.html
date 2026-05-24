@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_6.html -->
+<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_7.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_02</span></div>
+    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_03</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -215,8 +215,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+611,98 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_6.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_6.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_7.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_7.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -447,15 +447,6 @@ const Store = {
   async syncNow() {
     if (!this.gToken) return;
     UI.status('↻ Synkroniserer...');
-    // First save local data to Drive, then load from Drive
-    const saved = await this.driveSave();
-    if (!saved) {
-      // If save failed, try load instead
-      const ok = await this.driveLoad();
-      UI.status(ok ? '✅ Synkroniseret' : '⚠️ Sync fejl');
-      if (ok) UI.render();
-      return;
-    }
     const ok = await this.driveLoad();
     UI.status(ok ? '✅ Synkroniseret' : '⚠️ Sync fejl');
     if (ok) UI.render();
