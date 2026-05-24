@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_1.html -->
+<html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ EV Forbrug Tracker</title>
+<script src="./⚡ EV Forbrug Tracker_files/client" async="" defer=""></script>
+<style>
+:root {
+  --bg:#0d1117; --card:#161b22; --card2:#1f2636;
+  --accent:#4f8ef7; --green:#22c55e; --red:#ef4444; --amber:#f59e0b;
+  --text:#e6edf3; --muted:#7d8590; --border:#2d3748; --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;min-height:100vh;}
+
+/* HEADER */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hdr-logo{font-size:1.15rem;font-weight:700;}
+.hdr-sub{color:var(--muted);font-size:.72rem;margin-top:2px;}
+.hdr-right{display:flex;gap:8px;align-items:center;}
+.ver{font-size:.65rem;color:var(--accent);background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);padding:2px 9px;border-radius:20px;font-family:monospace;}
+
+/* SYNC BANNER */
+.banner{padding:9px 24px;font-size:.8rem;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.banner.ok{background:rgba(34,197,94,.07);color:#4ade80;}
+.banner.warn{background:rgba(245,158,11,.08);color:#f59e0b;border-color:rgba(245,158,11,.25);}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot.g{background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
+.dot.a{background:var(--amber);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* YEAR NAV */
+.year-nav{display:flex;align-items:center;gap:6px;padding:8px 24px;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.year-nav::-webkit-scrollbar{display:none;}
+.y-btn{font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;transition:all .15s;font-family:monospace;}
+.y-btn:hover{border-color:var(--accent);color:var(--text);}
+.y-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.y-btn.data{border-color:rgba(79,142,247,.35);color:var(--text);}
+.y-add{font-size:.72rem;padding:5px 11px;border-radius:6px;border:1px dashed rgba(79,142,247,.3);background:transparent;color:rgba(79,142,247,.5);cursor:pointer;transition:all .15s;}
+.y-add:hover{border-color:var(--accent);color:var(--accent);}
+
+/* MONTH NAV */
+.mon-nav{display:flex;align-items:center;gap:6px;padding:8px 24px;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.mon-nav::-webkit-scrollbar{display:none;}
+.m-btn{font-size:.78rem;font-weight:600;padding:5px 11px;border-radius:6px;border:1px solid transparent;background:transparent;color:rgba(255,255,255,.25);cursor:pointer;transition:all .15s;}
+.m-btn:hover{color:var(--text);}
+.m-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.m-btn.data{border-color:rgba(79,142,247,.3);color:var(--text);}
+.m-btn.future{opacity:.25;cursor:default;}
+.today-lbl{margin-left:auto;font-size:.72rem;color:var(--muted);white-space:nowrap;}
+
+/* TABS */
+.tabs{display:flex;padding:0 20px;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:11px 16px;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* MAIN */
+.main{padding:20px 24px;max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
+.main.wide{max-width:100%;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.card-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.card-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;}
+.kpi{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .15s;}
+.kpi:hover{border-color:rgba(79,142,247,.2);}
+.kpi.nb{border-color:rgba(79,142,247,.25);}
+.kpi.gb{border-color:rgba(34,197,94,.25);}
+.kpi.rb{border-color:rgba(239,68,68,.25);}
+.kpi.ab{border-color:rgba(245,158,11,.25);}
+.kpi-label{font-size:.65rem;color:var(--muted);margin-bottom:7px;line-height:1.4;text-transform:uppercase;letter-spacing:.05em;}
+.kpi-value{font-size:1.35rem;font-weight:700;line-height:1;font-family:monospace;}
+.kpi-sub{font-size:.68rem;color:var(--muted);margin-top:5px;line-height:1.4;}
+
+/* COLORS */
+.cn{color:var(--accent);} .cg{color:var(--green);} .cr{color:var(--red);} .ca{color:var(--amber);}
+.c-pos{color:var(--green);} .c-neg{color:var(--red);} .cm{color:var(--muted);}
+
+/* FORMS */
+.frow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.fi,.fs{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:7px 11px;border-radius:7px;font-size:.85rem;outline:none;transition:border-color .15s;}
+.fi:focus,.fs:focus{border-color:var(--accent);}
+.fs option{background:var(--card2);}
+
+/* BUTTONS */
+.btn{padding:7px 16px;border-radius:7px;border:none;cursor:pointer;font-size:.82rem;font-weight:700;transition:all .15s;}
+.btn-p{background:var(--accent);color:#fff;}
+.btn-p:hover{opacity:.88;transform:translateY(-1px);}
+.btn-g{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-g:hover{border-color:var(--accent);color:var(--text);}
+.btn-d{background:transparent;border:1px solid rgba(239,68,68,.25);color:var(--red);}
+.btn-d:hover{background:rgba(239,68,68,.08);}
+.btn-sm{padding:4px 10px;font-size:.74rem;}
+.btn-google{background:#fff;color:#444;border:1px solid #ddd;display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:700;transition:all .15s;}
+.btn-google:hover{box-shadow:0 2px 8px rgba(0,0,0,.2);}
+
+/* SESSION LIST */
+.slist{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.srow{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;flex-wrap:wrap;transition:border-color .15s;}
+.srow:hover{border-color:rgba(79,142,247,.2);}
+.srow.editing{border-color:var(--accent)!important;background:var(--card);}
+.tag{font-size:.65rem;padding:2px 8px;border-radius:4px;font-weight:700;letter-spacing:.04em;}
+.tag-h{background:rgba(79,172,254,.1);color:#7eb4ff;border:1px solid rgba(79,172,254,.2);}
+.tag-p{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.acts{margin-left:auto;display:flex;gap:5px;}
+
+/* TOTALS STRIP */
+.tstrip{display:flex;gap:18px;padding:9px 13px;background:rgba(79,142,247,.05);border:1px solid rgba(79,142,247,.12);border-radius:8px;margin-bottom:10px;flex-wrap:wrap;font-size:.82rem;}
+.tstrip .tl{color:var(--muted);font-size:.68rem;}
+.tstrip .tv{font-weight:700;margin-left:4px;font-family:monospace;}
+
+/* YEAR TABLE */
+.ytbl{width:100%;border-collapse:collapse;font-size:.78rem;}
+.ytbl th{padding:7px 10px;text-align:left;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;position:relative;}
+.ytbl td{padding:7px 10px;border-bottom:1px solid rgba(45,55,72,.4);white-space:nowrap;font-family:monospace;}
+.ytbl tr:hover td{background:rgba(255,255,255,.015);}
+.ytbl tr.cur td{background:rgba(79,142,247,.05);font-weight:700;}
+.ytbl tr.nd td{opacity:.25;}
+.ytbl tfoot td{border-top:1px solid var(--border);font-weight:700;padding-top:10px;}
+.th-a{color:var(--accent)!important;background:rgba(79,142,247,.06);}
+.th-s{color:var(--amber)!important;background:rgba(245,158,11,.06);}
+.th-r{color:var(--green)!important;background:rgba(34,197,94,.06);}
+
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:8px;font-size:.78rem;margin-bottom:12px;line-height:1.5;}
+.a-info{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);color:#7eb4ff;}
+.a-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--amber);}
+.a-ok  {background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.2); color:var(--green);}
+
+/* TOOLTIP */
+.tip{position:relative;display:inline-flex;align-items:center;gap:4px;}
+.tip-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(79,142,247,.12);color:var(--accent);font-size:.58rem;font-weight:700;cursor:default;}
+.tip:hover .tip-b{opacity:1;pointer-events:auto;transform:translateY(0);}
+.tip-b{opacity:0;pointer-events:none;transform:translateY(4px);transition:all .18s;position:absolute;top:calc(100% + 7px);left:0;min-width:200px;max-width:260px;background:#0d1117;border:1px solid rgba(79,142,247,.2);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--text);line-height:1.5;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.tip-b::before{content:'';position:absolute;bottom:100%;left:12px;border:5px solid transparent;border-bottom-color:rgba(79,142,247,.2);}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:14px 0;}
+.empty{text-align:center;padding:28px;font-size:.8rem;color:var(--muted);}
+.sec{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(79,142,247,.5);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(79,142,247,.15),transparent);}
+.savings-track{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.savings-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .8s cubic-bezier(.34,1.56,.64,1);}
+.savings-fill.neg{background:linear-gradient(90deg,var(--red),#ff6b7a);}
+
+@media(max-width:640px){
+  .main{padding:14px;}
+  .hdr,.year-nav,.mon-nav,.tabs{padding-left:14px;padding-right:14px;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+<style id="googleidentityservice_button_styles">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:14px;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:14px;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:11px;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style></head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div>
+    <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
+    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_00</span></div>
+  </div>
+  <div class="hdr-right">
+    <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
+    <button class="btn btn-g btn-sm" onclick="App.backup()">💾 Backup</button>
+  </div>
+</header>
+
+<!-- SYNC BANNER -->
+<div id="banner" class="banner warn">
+  <span class="dot a"></span>
+  <span id="bannerTxt">Ikke logget ind — data gemmes kun lokalt</span>
+  <div id="bannerBtns" style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap"><button class="btn-google" onclick="App.googleSignIn()">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path></svg>
+          Log ind med Google
+        </button>
+        <button class="btn btn-g btn-sm" onclick="App.pickFile()">📁 C-drev</button></div>
+</div>
+
+<!-- YEAR NAV -->
+<div class="year-nav">
+  <div id="yearTabs"><button class="y-btn active">2026</button></div>
+  <button class="y-add" onclick="App.addYear()">+ År</button>
+</div>
+
+<!-- MONTH NAV -->
+<div class="mon-nav">
+  <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn active" title="Maj 2026">Maj</button><button class="m-btn future" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
+  <span class="today-lbl" id="todayLbl">I dag: 24.05.2026</span>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" id="tab-overview" onclick="App.tab(&#39;overview&#39;)">📊 Oversigt</div>
+  <div class="tab" id="tab-sessions" onclick="App.tab(&#39;sessions&#39;)">⚡ Ladninger</div>
+  <div class="tab" id="tab-odometer" onclick="App.tab(&#39;odometer&#39;)">🚗 Km stand</div>
+  <div class="tab" id="tab-provider" onclick="App.tab(&#39;provider&#39;)">🔌 El-leverandør</div>
+  <div class="tab" id="tab-year" onclick="App.tab(&#39;year&#39;)">📈 Årsresultat</div>
+  <div class="tab" id="tab-settings" onclick="App.tab(&#39;settings&#39;)">⚙️ Indstillinger</div>
+</div>
+
+<div class="main" id="mainWrap" style="max-width: 960px;">
+  <div id="content"><div class="card"><div class="card-title">📊 Maj 2026 — Månedsoversigt</div>
+    <div class="kpi-grid">
+      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">203,3 kWh</div><div class="kpi-sub">16 ladninger</div></div>
+      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">138,02 kr</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
+      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">187,02 kr</div><div class="kpi-sub">ladning + 49,00 kr abo.</div></div>
+      <div class="kpi gb">
+        <div class="kpi-label">Besparelse vs. gammelt abo.</div>
+        <div class="kpi-value c-pos">+611,98 kr</div>
+        <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
+      </div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_1.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_1.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+    </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
+        <div class="savings-track"><div class="savings-fill " style="width:76.59324155193993%"></div></div>
+        <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:65px;text-align:right">799,00 kr</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px">
+        <span style="font-size:.7rem;color:var(--muted)">Din udgift: 187,02 kr</span>
+        <span style="font-size:.7rem;font-weight:700;color:var(--green)">SPAR 611,98 kr</span>
+      </div>
+    </div><div class="card"><div class="card-title">💳 Udgiftsfordeling</div>
+      <div class="sec">📱 Clever app — registrerede udgifter</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">138,02 kr</div><div class="kpi-sub">betalt ved lader</div></div>
+        <div class="kpi"><div class="kpi-label">Clever abo.</div><div class="kpi-value" style="font-size:1.1rem">49,00 kr</div><div class="kpi-sub">fast månedlig</div></div>
+        
+        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">187,02 kr</div><div class="kpi-sub">din reelle udgift</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sec">⚖️ Vs. gammelt abo. (799,00 kr/md)</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Gammelt abo. + tillæg</div><div class="kpi-value" style="font-size:1.1rem">799,00 kr</div><div class="kpi-sub">799,00 kr</div></div>
+        <div class="kpi gb"><div class="kpi-label">Din besparelse</div><div class="kpi-value c-pos" style="font-size:1.1rem">+611,98 kr</div><div class="kpi-sub">Du sparer</div></div>
+        
+      </div>
+    </div><div class="card"><div class="card-title">📁 Historisk samlede data</div>
+      <div class="alert a-info" style="margin-bottom:12px">Brug dette til måneder med kun samlede tal — f.eks. januar–april 2026.</div>
+      <div class="frow">
+        <div class="field"><label>Samlet kWh</label><input class="fi" type="text" inputmode="decimal" id="h_kwh" value="" placeholder="0,0" style="width:100px"></div>
+        <div class="field"><label>Samlet pris (kr)</label><input class="fi" type="text" inputmode="decimal" id="h_price" value="" placeholder="0,00" style="width:110px"></div>
+        <div class="field"><label>Km start</label><input class="fi" type="text" inputmode="numeric" id="h_kms" value="" placeholder="eks. 12500" style="width:110px"></div>
+        <div class="field"><label>Km slut</label><input class="fi" type="text" inputmode="numeric" id="h_kme" value="" placeholder="eks. 13200" style="width:110px"></div>
+        <div class="field" style="justify-content:flex-end;gap:6px">
+          <button class="btn btn-p" onclick="App.saveHistorical()">Gem</button>
+          
+        </div>
+      </div>
+    </div><div class="card"><div class="card-title">🔌 El-leverandør</div>
+        <div class="alert a-warn">Ingen regning tastet ind endnu. Regningen kommer ca. den 20. i næste måned.</div>
+        <button class="btn btn-g btn-sm" onclick="App.tab(&#39;provider&#39;)">Gå til El-leverandør →</button>
+      </div></div>
+</div>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+const H = {
+  pN: v => parseFloat(String(v||'').trim().replace(',','.')),
+  fKr:  n => n.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr',
+  fKwh: n => n.toLocaleString('da-DK',{minimumFractionDigits:1,maximumFractionDigits:1})+' kWh',
+  fRate:n => n.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr/kWh',
+  fKm:  n => n.toLocaleString('da-DK')+' km',
+  pad:  n => String(n).padStart(2,'0'),
+  fDate:iso => { const[y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; },
+  today:() => new Date().toISOString().slice(0,7),
+  todayFull:() => new Date().toISOString().slice(0,10),
+  todayDay:() => new Date().getDate(),
+};
+
+const MDA=['Januar','Februar','Marts','April','Maj','Juni','Juli','August','September','Oktober','November','December'];
+const SHORT=['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+
+// ═══════════════════════════════════════════════════
+//  DATA MODEL
+// ═══════════════════════════════════════════════════
+const LS_KEY = 'ev_tracker_v1'; // Same key as before — keeps existing data!
+
+function emptyData() {
+  return {
+    sessions: [], odometer: [], provider: {}, historical: {}, energitillaeg: {},
+    settings: { clever: 50, oldSub: 799 }
+  };
+}
+
+function sanitize(d) {
+  if (!d || typeof d !== 'object') return emptyData();
+  d.sessions     = Array.isArray(d.sessions) ? d.sessions : [];
+  d.odometer     = Array.isArray(d.odometer) ? d.odometer : [];
+  d.provider     = d.provider || {};
+  d.historical   = d.historical || {};
+  d.energitillaeg= d.energitillaeg || {};
+  d.settings     = d.settings || {};
+  d.settings.clever = d.settings.clever || 50;
+  d.settings.oldSub = d.settings.oldSub || 799;
+  return d;
+}
+
+let D = (() => {
+  try { return sanitize(JSON.parse(localStorage.getItem(LS_KEY))); }
+  catch { return emptyData(); }
+})();
+
+// ═══════════════════════════════════════════════════
+//  STORAGE — FILE + GOOGLE DRIVE
+// ═══════════════════════════════════════════════════
+const Store = {
+  fileHandle: null,
+  idb: null,
+  gToken: null,
+  gFileId: null,
+  gUser: null,
+
+  async init() {
+    // Open IndexedDB for file handle persistence
+    this.idb = await new Promise((res,rej) => {
+      const r = indexedDB.open('ev_store', 1);
+      r.onupgradeneeded = e => e.target.result.createObjectStore('kv');
+      r.onsuccess = e => res(e.target.result);
+      r.onerror = rej;
+    }).catch(() => null);
+
+    // Restore Google state
+    this.gToken  = sessionStorage.getItem('g_token') || null;
+    this.gFileId = localStorage.getItem('g_fid') || null;
+    this.gUser   = (() => { try { return JSON.parse(localStorage.getItem('g_user')); } catch { return null; } })();
+
+    // Try Google Drive first
+    if (this.gToken) {
+      const ok = await this.driveLoad();
+      if (ok) return;
+      // Token expired
+      this.gToken = null;
+      sessionStorage.removeItem('g_token');
+    }
+
+    // Try local file handle
+    const fh = await this._idbGet('fh');
+    if (fh) {
+      const data = await this._readFile(fh);
+      if (data) { this.fileHandle = fh; D = sanitize(data); localStorage.setItem(LS_KEY, JSON.stringify(D)); return; }
+      await this._idbDel('fh');
+    }
+  },
+
+  async save() {
+    localStorage.setItem(LS_KEY, JSON.stringify(D));
+    if (this.gToken) {
+      const ok = await this.driveSave();
+      UI.status(ok ? '✅ Gemt til Google Drive' : '⚠️ Drive-fejl');
+    } else if (this.fileHandle) {
+      const ok = await this._writeFile();
+      UI.status(ok ? '✅ Gemt til fil' : '⚠️ Fil-fejl');
+    }
+  },
+
+  // Google Drive
+  async googleSignIn() {
+    const clientId = localStorage.getItem('g_client_id');
+    if (!clientId) { alert('Indsæt dit Google Client ID under Indstillinger først.'); App.tab('settings'); return; }
+    try {
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+        callback: async (r) => {
+          if (r.error) { console.error(r); return; }
+          this.gToken = r.access_token;
+          sessionStorage.setItem('g_token', this.gToken);
+          try {
+            const ui = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer '+this.gToken } });
+            this.gUser = await ui.json();
+            localStorage.setItem('g_user', JSON.stringify(this.gUser));
+          } catch(e) {}
+          await this.driveLoad();
+          UI.banner(); UI.render();
+        }
+      });
+      client.requestAccessToken();
+    } catch(e) { console.error('Google sign-in error:', e); }
+  },
+
+  googleSignOut() {
+    this.gToken = null; this.gFileId = null; this.gUser = null;
+    sessionStorage.removeItem('g_token');
+    localStorage.removeItem('g_fid');
+    localStorage.removeItem('g_user');
+    UI.banner();
+  },
+
+  async driveLoad() {
+    if (!this.gToken) return false;
+    try {
+      const r = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='ev_data.json'&fields=files(id)`, {
+        headers: { Authorization: 'Bearer '+this.gToken }
+      });
+      const j = await r.json();
+      if (j.files && j.files.length) {
+        this.gFileId = j.files[0].id;
+        localStorage.setItem('g_fid', this.gFileId);
+        const dl = await fetch(`https://www.googleapis.com/drive/v3/files/${this.gFileId}?alt=media`, {
+          headers: { Authorization: 'Bearer '+this.gToken }
+        });
+        D = sanitize(JSON.parse(await dl.text()));
+        localStorage.setItem(LS_KEY, JSON.stringify(D));
+        return true;
+      }
+      return false;
+    } catch(e) { console.error('Drive load:', e); return false; }
+  },
+
+  async driveSave() {
+    if (!this.gToken) return false;
+    try {
+      const body = JSON.stringify(D, null, 2);
+      const boundary = 'EVT_BOUNDARY';
+      const meta = this.gFileId ? '{}' : JSON.stringify({ name:'ev_data.json', parents:['appDataFolder'] });
+      const multipart = `--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${boundary}--`;
+      const url = this.gFileId
+        ? `https://www.googleapis.com/upload/drive/v3/files/${this.gFileId}?uploadType=multipart`
+        : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+      const method = this.gFileId ? 'PATCH' : 'POST';
+      const r = await fetch(url, { method, headers: { Authorization:'Bearer '+this.gToken, 'Content-Type':`multipart/related; boundary=${boundary}` }, body: multipart });
+      if (!r.ok) return false;
+      if (!this.gFileId) { const j = await r.json(); this.gFileId = j.id; localStorage.setItem('g_fid', this.gFileId); }
+      return true;
+    } catch(e) { console.error('Drive save:', e); return false; }
+  },
+
+  async syncNow() {
+    if (!this.gToken) return;
+    UI.status('↻ Synkroniserer...');
+    const ok = await this.driveLoad();
+    UI.status(ok ? '✅ Synkroniseret' : '⚠️ Sync fejl');
+    UI.render();
+  },
+
+  // Local file
+  async pickFile() {
+    if (!('showSaveFilePicker' in window)) { alert('Brug Chrome eller Edge for C-drev gemning.'); return; }
+    try {
+      const h = await window.showSaveFilePicker({ suggestedName:'ev_data.json', types:[{description:'JSON',accept:{'application/json':['.json']}}] });
+      this.fileHandle = h;
+      await this._idbPut('fh', h);
+      await this._writeFile();
+      UI.banner();
+      UI.status('✅ Fil tilknyttet');
+    } catch(e) { if (e.name !== 'AbortError') console.error(e); }
+  },
+
+  async detachFile() { this.fileHandle = null; await this._idbDel('fh'); UI.banner(); },
+
+  async _writeFile() {
+    if (!this.fileHandle) return false;
+    try {
+      let ok = (await this.fileHandle.queryPermission({mode:'readwrite'})) === 'granted';
+      if (!ok) ok = (await this.fileHandle.requestPermission({mode:'readwrite'})) === 'granted';
+      if (!ok) return false;
+      const w = await this.fileHandle.createWritable();
+      await w.write(JSON.stringify(D, null, 2));
+      await w.close();
+      return true;
+    } catch(e) { return false; }
+  },
+
+  async _readFile(h) {
+    try {
+      let ok = (await h.queryPermission({mode:'readwrite'})) === 'granted';
+      if (!ok) ok = (await h.requestPermission({mode:'readwrite'})) === 'granted';
+      if (!ok) return null;
+      return JSON.parse(await (await h.getFile()).text());
+    } catch(e) { return null; }
+  },
+
+  backup() {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(D,null,2)], {type:'application/json'}));
+    a.download = `ev_backup_${H.todayFull()}.json`;
+    a.click();
+  },
+
+  importFile() {
+    const inp = document.createElement('input');
+    inp.type='file'; inp.accept='.json';
+    inp.onchange = e => {
+      const r = new FileReader();
+      r.onload = ev => {
+        try {
+          const imp = sanitize(JSON.parse(ev.target.result));
+          if (!confirm('Overskriver alle nuværende data. Sikker?')) return;
+          D = imp; this.save(); UI.render(); alert('Importeret!');
+        } catch { alert('Ugyldig fil'); }
+      };
+      r.readAsText(e.target.files[0]);
+    };
+    inp.click();
+  },
+
+  resetAll() {
+    if (!confirm('Slet ALLE data permanent?')) return;
+    if (!confirm('Kan ikke fortrydes!')) return;
+    localStorage.removeItem(LS_KEY);
+    D = emptyData(); this.save(); UI.render();
+  },
+
+  // IDB helpers
+  _idbPut(k, v) { return new Promise((res,rej) => { if(!this.idb)return res(); const tx=this.idb.transaction('kv','readwrite'); tx.objectStore('kv').put(v,k); tx.oncomplete=res; tx.onerror=rej; }); },
+  _idbGet(k)   { return new Promise((res,rej) => { if(!this.idb)return res(null); const tx=this.idb.transaction('kv','readonly'); const r=tx.objectStore('kv').get(k); r.onsuccess=e=>res(e.target.result||null); r.onerror=rej; }); },
+  _idbDel(k)   { return new Promise((res,rej) => { if(!this.idb)return res(); const tx=this.idb.transaction('kv','readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete=res; tx.onerror=rej; }); },
+};
+
+// ═══════════════════════════════════════════════════
+//  CALCULATIONS
+// ═══════════════════════════════════════════════════
+const Calc = {
+  sess: ym  => D.sessions.filter(s => s.date.startsWith(ym)),
+  odo:  ym  => D.odometer.filter(o => o.month === ym),
+
+  firstKm(ym) {
+    const e = D.odometer.filter(o=>o.month===ym);
+    if (!e.length) return null;
+    return e.sort((a,b)=>a.date.localeCompare(b.date))[0].km;
+  },
+
+  nextYm(ym) {
+    const [y,m] = ym.split('-').map(Number);
+    const d = new Date(y, m, 1);
+    return d.getFullYear()+'-'+H.pad(d.getMonth()+1);
+  },
+
+  month(ym) {
+    const hist = D.historical[ym];
+    const sess = this.sess(ym);
+    let kWh=0, price=0, isHist=false;
+
+    if (hist && (hist.totalKwh || hist.totalPrice)) {
+      kWh=hist.totalKwh||0; price=hist.totalPrice||0; isHist=true;
+    } else {
+      kWh   = sess.reduce((a,s)=>a+(s.kwh||0), 0);
+      price = sess.reduce((a,s)=>a+(s.price||0), 0);
+    }
+
+    const eRate     = (D.energitillaeg||{})[ym] || 0;
+    const eKr       = eRate * kWh;
+    const clever    = D.settings.clever;
+    const total     = price + clever;
+    const oldWithE  = D.settings.oldSub + eKr;
+    const savings   = oldWithE - total;
+
+    // Km
+    let km=null, krKm=null;
+    if (isHist && hist.kmStart!=null && hist.kmEnd!=null) {
+      km = hist.kmEnd - hist.kmStart;
+    } else {
+      const s = this.firstKm(ym);
+      const e = this.firstKm(this.nextYm(ym));
+      if (s!=null && e!=null) km = e - s;
+    }
+    if (km!=null && km>0) krKm = total / km;
+
+    const pv = D.provider[ym] || null;
+    const provDiff = pv ? { kwhDiff: kWh-pv.totalKwh, priceDiff: price-pv.totalPrice } : null;
+
+    return { kWh, price, eRate, eKr, clever, total, oldWithE, savings, km, krKm, isHist, n: sess.length, pv, provDiff };
+  },
+};
+
+// ═══════════════════════════════════════════════════
+//  UI STATE
+// ═══════════════════════════════════════════════════
+let curYear = new Date().getFullYear().toString();
+let curMon  = H.today();
+let activeTab = 'overview';
+
+// ═══════════════════════════════════════════════════
+//  UI RENDERING
+// ═══════════════════════════════════════════════════
+const UI = {
+  render() {
+    this._buildYearTabs();
+    this._buildMonTabs();
+    document.getElementById('todayLbl').textContent = 'I dag: '+new Date().toLocaleDateString('da-DK',{day:'2-digit',month:'2-digit',year:'numeric'});
+    document.getElementById('mainWrap').style.maxWidth = activeTab==='year' ? '100%' : '960px';
+    this._renderContent();
+  },
+
+  _buildYearTabs() {
+    const years = new Set([curYear]);
+    D.sessions.forEach(s=>years.add(s.date.slice(0,4)));
+    Object.keys(D.historical).forEach(k=>years.add(k.slice(0,4)));
+    D.odometer.forEach(o=>years.add(o.month.slice(0,4)));
+    const el = document.getElementById('yearTabs');
+    el.innerHTML = '';
+    [...years].sort().forEach(y => {
+      const hasData = D.sessions.some(s=>s.date.startsWith(y));
+      const b = document.createElement('button');
+      b.className = 'y-btn' + (y===curYear?' active':'') + (hasData&&y!==curYear?' data':'');
+      b.textContent = y;
+      b.onclick = () => { curYear=y; curMon=y+'-'+H.pad(new Date().getMonth()+1); UI.render(); };
+      el.appendChild(b);
+    });
+  },
+
+  _buildMonTabs() {
+    const nowYm = H.today();
+    const el = document.getElementById('monTabs');
+    el.innerHTML = '';
+    for (let m=1; m<=12; m++) {
+      const ym = `${curYear}-${H.pad(m)}`;
+      const isFuture = ym > nowYm;
+      const isActive = ym === curMon;
+      const hasData  = D.sessions.some(s=>s.date.startsWith(ym)) || D.odometer.some(o=>o.month===ym) || !!D.historical[ym];
+      const b = document.createElement('button');
+      b.className = 'm-btn' + (isActive?' active':'') + (isFuture?' future':'') + (!isActive&&hasData?' data':'');
+      b.textContent = SHORT[m-1];
+      b.title = MDA[m-1]+' '+curYear;
+      if (!isFuture) b.onclick = () => { curMon=ym; UI.render(); };
+      el.appendChild(b);
+    }
+  },
+
+  _renderContent() {
+    const renders = { overview:this.overview, sessions:this.sessions, odometer:this.odometer, provider:this.provider, year:this.year, settings:this.settings };
+    const fn = renders[activeTab];
+    const html = fn ? fn.call(this) : '';
+    document.getElementById('content').innerHTML = html;
+  },
+
+  status(msg) {
+    const el = document.getElementById('saveStatus');
+    if (el) { el.textContent=msg; setTimeout(()=>{el.textContent='';}, 3000); }
+  },
+
+  banner() {
+    const b  = document.getElementById('banner');
+    const bt = document.getElementById('bannerTxt');
+    const bb = document.getElementById('bannerBtns');
+    if (!b) return;
+    if (Store.gUser) {
+      b.className='banner ok';
+      bt.textContent='✅ Google Drive: '+(Store.gUser.name||Store.gUser.email);
+      bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.syncNow()">↻ Synk</button>
+                    <button class="btn btn-g btn-sm" onclick="Store.backup()">💾 Backup</button>
+                    <button class="btn btn-g btn-sm" onclick="Store.googleSignOut()">Log ud</button>`;
+    } else if (Store.fileHandle) {
+      b.className='banner ok';
+      bt.textContent='✅ Fil: '+Store.fileHandle.name;
+      bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.detachFile()">Frakobl</button>
+                    <button class="btn btn-g btn-sm" onclick="Store.backup()">💾 Backup</button>`;
+    } else {
+      b.className='banner warn';
+      bt.textContent='Ikke logget ind — data gemmes kun lokalt';
+      bb.innerHTML=`<button class="btn-google" onclick="App.googleSignIn()">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Log ind med Google
+        </button>
+        <button class="btn btn-g btn-sm" onclick="App.pickFile()">📁 C-drev</button>`;
+    }
+  },
+
+  // ── OVERVIEW ──────────────────────────────────
+  overview() {
+    const c = Calc.month(curMon);
+    const hist = D.historical[curMon];
+    let h = '';
+
+    if (c.isHist) h += `<div class="alert a-info">📋 Historisk samlede data for denne måned.</div>`;
+
+    // Main KPIs
+    h += `<div class="card"><div class="card-title">📊 ${MDA[+curMon.split('-')[1]-1]} ${curYear} — Månedsoversigt</div>
+    <div class="kpi-grid">
+      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">${H.fKwh(c.kWh)}</div><div class="kpi-sub">${c.isHist?'historisk total':c.n+' ladning'+(c.n!==1?'er':'')}</div></div>
+      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">${H.fKr(c.price)}</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
+      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">${H.fKr(c.total)}</div><div class="kpi-sub">ladning + ${H.fKr(c.clever)} abo.</div></div>
+      <div class="kpi ${c.savings>=0?'gb':'rb'}">
+        <div class="kpi-label">Besparelse vs. gammelt abo.</div>
+        <div class="kpi-value ${c.savings>=0?'c-pos':'c-neg'}">${c.savings>=0?'+':''}${H.fKr(c.savings)}</div>
+        <div class="kpi-sub">${c.savings>=0?'✓ Spar':'✗ Dyrere'} vs. ${H.fKr(D.settings.oldSub)}/md</div>
+      </div>
+      ${c.km!=null
+        ?`<div class="kpi"><div class="kpi-label">Kørte km</div><div class="kpi-value cn">${H.fKm(c.km)}</div><div class="kpi-sub">denne måned</div></div>
+          <div class="kpi"><div class="kpi-label">Pris pr. km</div><div class="kpi-value">${c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})} kr</div><div class="kpi-sub">inkl. Clever abo.</div></div>`
+        :`<div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="#" onclick="App.tab('odometer');return false;" style="color:var(--accent)">→ Tilføj</a></div></div>`
+      }
+      ${c.pv
+        ?`<div class="kpi gb"><div class="kpi-label">🧾 Reel forbrug (lev.)</div><div class="kpi-value cg">${H.fKwh(c.pv.totalKwh)}</div><div class="kpi-sub">efter solcelle-fradrag</div></div>
+          <div class="kpi gb"><div class="kpi-label">🧾 Reel betalt (lev.)</div><div class="kpi-value">${H.fKr(c.pv.totalPrice)}</div><div class="kpi-sub">leverandørens regning</div></div>`
+        :`<div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="#" onclick="App.tab('provider');return false;" style="color:var(--accent)">→ Tilføj</a></div></div>`
+      }
+    </div></div>`;
+
+    // Savings meter
+    const pct = Math.abs(Math.min(Math.max(c.savings/D.settings.oldSub,-1),1))*100;
+    h += `<div class="card"><div class="card-title">📈 Besparelses-meter</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
+        <div class="savings-track"><div class="savings-fill ${c.savings<0?'neg':''}" style="width:${pct}%"></div></div>
+        <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:65px;text-align:right">${H.fKr(D.settings.oldSub)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px">
+        <span style="font-size:.7rem;color:var(--muted)">Din udgift: ${H.fKr(c.total)}</span>
+        <span style="font-size:.7rem;font-weight:700;color:${c.savings>=0?'var(--green)':'var(--red)'}">${c.savings>=0?'SPAR '+H.fKr(c.savings):'OVER '+H.fKr(Math.abs(c.savings))}</span>
+      </div>
+    </div>`;
+
+    // Udgiftsfordeling
+    h += `<div class="card"><div class="card-title">💳 Udgiftsfordeling</div>
+      <div class="sec">📱 Clever app — registrerede udgifter</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">${H.fKr(c.price)}</div><div class="kpi-sub">betalt ved lader</div></div>
+        <div class="kpi"><div class="kpi-label">Clever abo.</div><div class="kpi-value" style="font-size:1.1rem">${H.fKr(c.clever)}</div><div class="kpi-sub">fast månedlig</div></div>
+        ${c.eKr>0?`<div class="kpi rb"><div class="kpi-label">Energitillæg</div><div class="kpi-value cr" style="font-size:1.1rem">${H.fKr(c.eKr)}</div><div class="kpi-sub">${H.fRate(c.eRate)} × ${H.fKwh(c.kWh)}</div></div>`:''}
+        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">${H.fKr(c.total)}</div><div class="kpi-sub">din reelle udgift</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sec">⚖️ Vs. gammelt abo. (${H.fKr(D.settings.oldSub)}/md)</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Gammelt abo. + tillæg</div><div class="kpi-value" style="font-size:1.1rem">${H.fKr(c.oldWithE)}</div><div class="kpi-sub">${H.fKr(D.settings.oldSub)}${c.eKr>0?' + '+H.fKr(c.eKr):''}</div></div>
+        <div class="kpi ${c.savings>=0?'gb':'rb'}"><div class="kpi-label">Din besparelse</div><div class="kpi-value ${c.savings>=0?'c-pos':'c-neg'}" style="font-size:1.1rem">${c.savings>=0?'+':''}${H.fKr(c.savings)}</div><div class="kpi-sub">${c.savings>=0?'Du sparer':'Dyrere end gammelt'}</div></div>
+        ${c.pv?`<div class="kpi gb"><div class="kpi-label">Besparelse (reel)</div><div class="kpi-value cg" style="font-size:1.1rem">${(D.settings.oldSub+c.eKr-(c.pv.totalPrice+c.clever))>=0?'+':''}${H.fKr(D.settings.oldSub+c.eKr-(c.pv.totalPrice+c.clever))}</div><div class="kpi-sub">baseret på leverandørtal</div></div>`:''}
+      </div>
+    </div>`;
+
+    // Historisk data
+    const hv = hist||{};
+    h += `<div class="card"><div class="card-title">📁 Historisk samlede data</div>
+      <div class="alert a-info" style="margin-bottom:12px">Brug dette til måneder med kun samlede tal — f.eks. januar–april 2026.</div>
+      <div class="frow">
+        <div class="field"><label>Samlet kWh</label><input class="fi" type="text" inputmode="decimal" id="h_kwh" value="${hv.totalKwh?String(hv.totalKwh).replace('.',','):''}" placeholder="0,0" style="width:100px"></div>
+        <div class="field"><label>Samlet pris (kr)</label><input class="fi" type="text" inputmode="decimal" id="h_price" value="${hv.totalPrice?String(hv.totalPrice).replace('.',','):''}" placeholder="0,00" style="width:110px"></div>
+        <div class="field"><label>Km start</label><input class="fi" type="text" inputmode="numeric" id="h_kms" value="${hv.kmStart!=null?hv.kmStart:''}" placeholder="eks. 12500" style="width:110px"></div>
+        <div class="field"><label>Km slut</label><input class="fi" type="text" inputmode="numeric" id="h_kme" value="${hv.kmEnd!=null?hv.kmEnd:''}" placeholder="eks. 13200" style="width:110px"></div>
+        <div class="field" style="justify-content:flex-end;gap:6px">
+          <button class="btn btn-p" onclick="App.saveHistorical()">Gem</button>
+          ${hist&&(hist.totalKwh||hist.totalPrice)?`<button class="btn btn-d btn-sm" onclick="App.delHistorical()">Slet</button>`:''}
+        </div>
+      </div>
+    </div>`;
+
+    // Provider comparison
+    if (c.pv) {
+      const kOk=Math.abs(c.provDiff.kwhDiff)<2, pOk=Math.abs(c.provDiff.priceDiff)<20;
+      h += `<div class="card"><div class="card-title">🔌 El-leverandør sammenligning</div>
+        <div class="kpi-grid">
+          <div class="kpi nb"><div class="kpi-label">Dine registreringer</div><div class="kpi-value cn">${H.fKwh(c.kWh)}</div><div class="kpi-sub">${H.fKr(c.price)}</div></div>
+          <div class="kpi gb"><div class="kpi-label">Leverandøren melder</div><div class="kpi-value cg">${H.fKwh(c.pv.totalKwh)}</div><div class="kpi-sub">${H.fKr(c.pv.totalPrice)}</div></div>
+          <div class="kpi ${kOk?'gb':'rb'}"><div class="kpi-label">kWh forskel</div><div class="kpi-value ${kOk?'c-pos':'c-neg'}">${c.provDiff.kwhDiff>=0?'+':''}${c.provDiff.kwhDiff.toFixed(1).replace('.',',')}</div><div class="kpi-sub">${kOk?'✓ OK':'⚠ Tjek dage'}</div></div>
+          <div class="kpi ${pOk?'gb':'rb'}"><div class="kpi-label">Pris forskel</div><div class="kpi-value ${pOk?'c-pos':'c-neg'}">${c.provDiff.priceDiff>=0?'+':''}${H.fKr(c.provDiff.priceDiff)}</div><div class="kpi-sub">${pOk?'✓ God match':'⚠ Tjek priser'}</div></div>
+        </div>
+      </div>`;
+    } else {
+      h += `<div class="card"><div class="card-title">🔌 El-leverandør</div>
+        <div class="alert a-warn">Ingen regning tastet ind endnu. Regningen kommer ca. den 20. i næste måned.</div>
+        <button class="btn btn-g btn-sm" onclick="App.tab('provider')">Gå til El-leverandør →</button>
+      </div>`;
+    }
+
+    return h;
+  },
+
+  // ── SESSIONS ──────────────────────────────────
+  sessions() {
+    const sess = Calc.sess(curMon).sort((a,b)=>a.date.localeCompare(b.date));
+    const eRate = (D.energitillaeg||{})[curMon]||0;
+    const c = Calc.month(curMon);
+    let h = '';
+
+    // Add form
+    h += `<div class="card"><div class="card-title">➕ Registrér ladning — ${MDA[+curMon.split('-')[1]-1]}</div>
+      <div class="frow">
+        <div class="field"><label>Dag</label><input class="fi" type="text" inputmode="numeric" id="ns_d" value="${H.todayDay()}" maxlength="2" style="width:60px"></div>
+        <div class="field"><label>kWh ladet</label><input class="fi" type="text" inputmode="decimal" id="ns_k" placeholder="35,5" style="width:85px"></div>
+        <div class="field"><label>Pris (kr)</label><input class="fi" type="text" inputmode="decimal" id="ns_p" placeholder="87,50" style="width:95px"></div>
+        <div class="field"><label>Sted</label><select class="fs" id="ns_l" style="width:120px"><option value="home">🏠 Hjemme</option><option value="public">⚡ Offentlig</option></select></div>
+        <div class="field" style="justify-content:flex-end"><button class="btn btn-p" onclick="App.addSess()">Tilføj</button></div>
+      </div>
+    </div>`;
+
+    // Energitillæg
+    h += `<div class="card"><div class="card-title">⚡ Clever energitillæg — ${MDA[+curMon.split('-')[1]-1]}
+      <span class="tip" style="margin-left:4px"><span class="tip-i">i</span><span class="tip-b">Tastes når måneden er afsluttet. Satsen × samlet forbrug lægges til sammenligning med gammelt abo. Ingen tillæg? Skriv 0.</span></span>
+    </div>
+      <div class="frow" style="align-items:flex-end">
+        <div class="field"><label>⚡ Clever energitillæg (kr/kWh)</label><input class="fi" type="text" inputmode="decimal" id="enrg" value="${String(eRate).replace('.',',')}" placeholder="0" style="width:110px"></div>
+        ${c.kWh>0&&eRate>0?`<div style="font-size:.8rem;color:var(--muted);padding-bottom:8px">${H.fRate(eRate)} × ${H.fKwh(c.kWh)} = <strong style="color:var(--red)">${H.fKr(c.eKr)}</strong></div>`:''}
+        <div class="field" style="justify-content:flex-end"><button class="btn btn-g" onclick="App.saveEnergi()">Gem</button></div>
+      </div>
+    </div>`;
+
+    // List
+    h += `<div class="card"><div class="card-title">📋 Ladninger — ${MDA[+curMon.split('-')[1]-1]} ${curYear}</div>`;
+    if (!sess.length) {
+      h += `<div class="empty">Ingen ladninger for denne måned endnu.</div>`;
+    } else {
+      const totK = sess.reduce((a,s)=>a+s.kwh,0);
+      const totP = sess.reduce((a,s)=>a+s.price,0);
+      h += `<div class="tstrip"><span><span class="tl">TOTAL</span><span class="tv cn">${H.fKwh(totK)}</span></span><span><span class="tl">BETALT</span><span class="tv cg">${H.fKr(totP)}</span></span><span><span class="tl">SNIT</span><span class="tv">${totK>0?H.fRate(totP/totK):'—'}</span></span><span style="margin-left:auto"><span class="tl">LADNINGER</span><span class="tv">${sess.length}</span></span></div>`;
+      h += `<div class="slist">`;
+      sess.forEach(s => {
+        const rate = s.kwh>0 ? H.fRate(s.price/s.kwh) : '—';
+        h += `<div class="srow" id="sr-${s.id}">
+          <span style="font-family:monospace;font-size:.78rem;color:var(--muted);min-width:85px">${H.fDate(s.date)}</span>
+          <span class="tag ${s.location==='home'?'tag-h':'tag-p'}">${s.location==='home'?'HJEM':'OFF.'}</span>
+          <span style="font-family:monospace;font-weight:700">${H.fKwh(s.kwh)}</span>
+          <span style="font-family:monospace;color:var(--green)">${H.fKr(s.price)}</span>
+          <span style="font-family:monospace;font-size:.75rem;color:var(--muted)">${rate}</span>
+          <div class="acts">
+            <button class="btn btn-g btn-sm" onclick="App.editSess('${s.id}')">✏</button>
+            <button class="btn btn-d btn-sm" onclick="App.delSess('${s.id}')">✕</button>
+          </div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+    h += `</div>`;
+    return h;
+  },
+
+  // ── ODOMETER ──────────────────────────────────
+  odometer() {
+    const entries = Calc.odo(curMon).sort((a,b)=>a.date.localeCompare(b.date));
+    const startKm = Calc.firstKm(curMon);
+    const endKm   = Calc.firstKm(Calc.nextYm(curMon));
+    const driven  = startKm!=null&&endKm!=null ? endKm-startKm : null;
+    const nextMon = MDA[+Calc.nextYm(curMon).split('-')[1]-1];
+    const thisMon = MDA[+curMon.split('-')[1]-1];
+    let h = '';
+
+    h += `<div class="card"><div class="card-title">🚗 Km stand — ${thisMon} ${curYear}
+      <span class="tip" style="margin-left:4px"><span class="tip-i">i</span><span class="tip-b">Tast km-stand den 1. i hver måned. Kørt i ${thisMon} = aflæsning 1. ${nextMon} − aflæsning 1. ${thisMon}.</span></span>
+    </div>
+      <div class="frow">
+        <div class="field"><label>Dag</label><input class="fi" type="text" inputmode="numeric" id="od_d" value="${H.todayDay()}" maxlength="2" style="width:60px"></div>
+        <div class="field"><label>Km stand</label><input class="fi" type="text" inputmode="numeric" id="od_k" placeholder="eks. 13250" style="width:130px"></div>
+        <div class="field" style="justify-content:flex-end"><button class="btn btn-p" onclick="App.addOdo()">Tilføj</button></div>
+      </div>
+    </div>`;
+
+    h += `<div class="card"><div class="card-title">📋 Aflæsninger — ${thisMon}</div>`;
+    if (!entries.length) {
+      h += `<div class="empty">Ingen km-aflæsninger endnu.</div>`;
+    } else {
+      if (driven!=null) {
+        h += `<div class="tstrip"><span><span class="tl">AFLÆSNING</span><span class="tv cn">${H.fKm(Math.max(...entries.map(o=>o.km)))}</span></span><span><span class="tl">KØRT I ${thisMon.toUpperCase()}</span><span class="tv cg">${H.fKm(driven)}</span></span></div>`;
+      } else {
+        h += `<div class="alert a-warn" style="margin-bottom:10px">Afventer aflæsning 1. ${nextMon} for at beregne km kørt.</div>`;
+      }
+      h += `<div class="slist">`;
+      entries.forEach(e => {
+        const nextKm = endKm;
+        h += `<div class="srow" id="od-${e.id}">
+          <span style="font-family:monospace;font-size:.78rem;color:var(--muted);min-width:85px">${H.fDate(e.date)}</span>
+          <span style="font-family:monospace;font-weight:700;color:var(--accent)">${H.fKm(e.km)}</span>
+          ${nextKm!=null
+            ?`<span style="font-size:.75rem;color:var(--muted)">${H.fKm(nextKm)} − ${H.fKm(e.km)} = <span style="color:var(--green)">${H.fKm(nextKm-e.km)}</span> kørt</span>`
+            :`<span style="font-size:.75rem;color:var(--muted)">venter på 1. ${nextMon}</span>`}
+          <div class="acts">
+            <button class="btn btn-g btn-sm" onclick="App.editOdo('${e.id}')">✏</button>
+            <button class="btn btn-d btn-sm" onclick="App.delOdo('${e.id}')">✕</button>
+          </div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+    h += `</div>`;
+    return h;
+  },
+
+  // ── PROVIDER ──────────────────────────────────
+  provider() {
+    const pv = D.provider[curMon]||{};
+    const avg = pv.totalKwh&&pv.totalPrice ? pv.totalPrice/pv.totalKwh : 0;
+    const nextMon = MDA[+Calc.nextYm(curMon).split('-')[1]-1];
+    const c = Calc.month(curMon);
+    let h = '';
+
+    h += `<div class="card"><div class="card-title">🔌 El-leverandør opgørelse — ${MDA[+curMon.split('-')[1]-1]} ${curYear}</div>
+      <div class="alert a-info" style="margin-bottom:14px">💡 Regning for <strong>${MDA[+curMon.split('-')[1]-1]}</strong> modtager du ca. den <strong>20. ${nextMon}</strong>.</div>
+      <div class="frow">
+        <div class="field"><label>Samlet kWh (fra regning)</label><input class="fi" type="text" inputmode="decimal" id="pv_k" value="${pv.totalKwh?String(pv.totalKwh).replace('.',','):''}" placeholder="eks. 145,3" style="width:130px" oninput="App.calcPv()"></div>
+        <div class="field"><label>Gennemsnitspris (kr/kWh)</label><input class="fi" type="text" inputmode="decimal" id="pv_a" value="${avg?avg.toFixed(4).replace('.',','):''}" placeholder="eks. 2,85" style="width:130px" oninput="App.calcPv()"></div>
+        <div class="field"><label>Total (kr)</label><input class="fi" type="text" inputmode="decimal" id="pv_t" value="${pv.totalPrice?String(pv.totalPrice).replace('.',','):''}" placeholder="auto" style="width:120px"></div>
+        <div class="field" style="justify-content:flex-end;gap:6px">
+          <button class="btn btn-p" onclick="App.savePv()">Gem</button>
+          ${pv.totalKwh?`<button class="btn btn-d btn-sm" onclick="App.delPv()">Slet</button>`:''}
+        </div>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:8px">Total beregnes automatisk = kWh × gennemsnitspris</div>
+    </div>`;
+
+    if (pv.totalKwh && c.provDiff) {
+      const kOk=Math.abs(c.provDiff.kwhDiff)<2, pOk=Math.abs(c.provDiff.priceDiff)<20;
+      h += `<div class="card"><div class="card-title">⚖️ Sammenligning</div>
+        <div class="kpi-grid">
+          <div class="kpi nb"><div class="kpi-label">Dine registreringer</div><div class="kpi-value cn">${H.fKwh(c.kWh)}</div><div class="kpi-sub">${H.fKr(c.price)}</div></div>
+          <div class="kpi gb"><div class="kpi-label">Leverandøren</div><div class="kpi-value cg">${H.fKwh(c.pv.totalKwh)}</div><div class="kpi-sub">${H.fKr(c.pv.totalPrice)}</div></div>
+          <div class="kpi ${kOk?'gb':'rb'}"><div class="kpi-label">kWh forskel</div><div class="kpi-value ${kOk?'c-pos':'c-neg'}">${c.provDiff.kwhDiff>=0?'+':''}${c.provDiff.kwhDiff.toFixed(1).replace('.',',')}</div><div class="kpi-sub">${kOk?'✓ OK':'⚠ Tjek dage'}</div></div>
+          <div class="kpi ${pOk?'gb':'rb'}"><div class="kpi-label">Pris forskel</div><div class="kpi-value ${pOk?'c-pos':'c-neg'}">${c.provDiff.priceDiff>=0?'+':''}${H.fKr(c.provDiff.priceDiff)}</div><div class="kpi-sub">${pOk?'✓ Match':'⚠ Tjek priser'}</div></div>
+        </div>
+      </div>`;
+    }
+    return h;
+  },
+
+  // ── YEAR ──────────────────────────────────────
+  year() {
+    const months = Array.from({length:12},(_,i)=>`${curYear}-${H.pad(i+1)}`);
+    const calcs  = months.map(ym=>({ym,...Calc.month(ym)}));
+    const totKwh = calcs.reduce((a,c)=>a+c.kWh,0);
+    const totPrice= calcs.reduce((a,c)=>a+c.price,0);
+    const totTotal= calcs.reduce((a,c)=>a+c.total,0);
+    const totSav  = calcs.reduce((a,c)=>a+(c.kWh>0||c.n>0?c.savings:0),0);
+    const moCount = calcs.filter(c=>c.kWh>0||c.n>0).length;
+    const totProvKwh  = calcs.reduce((a,c)=>a+(c.pv?c.pv.totalKwh:0),0);
+    const totProvPrice= calcs.reduce((a,c)=>a+(c.pv?c.pv.totalPrice:0),0);
+    const totEnergi   = calcs.reduce((a,c)=>a+c.eKr,0);
+    const totProvSav  = calcs.reduce((a,c)=>{if(!c.pv)return a;return a+(c.oldWithE-(c.pv.totalPrice+c.clever));},0);
+
+    let h = `<div class="card"><div class="card-title">📈 ${curYear} — Årsresultat</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px;align-items:stretch">
+        <div class="kpi nb"><div class="kpi-label">📱 App — forbrug</div><div class="kpi-value cn">${H.fKwh(totKwh)}</div><div class="kpi-sub">${moCount} mdr. med data</div></div>
+        <div class="kpi ab"><div class="kpi-label">📱 App — udgift inkl. Clever</div><div class="kpi-value ca">${H.fKr(totTotal)}</div><div class="kpi-sub">alle måneder</div></div>
+        <div class="kpi ${totSav>=0?'gb':'rb'}"><div class="kpi-label">📱 App — besparelse</div><div class="kpi-value ${totSav>=0?'c-pos':'c-neg'}">${totSav>=0?'+':''}${H.fKr(totSav)}</div><div class="kpi-sub">vs. ${H.fKr(D.settings.oldSub)}/md × ${moCount}</div></div>
+        <div class="kpi" style="grid-row:span 2;display:flex;flex-direction:column;justify-content:center;border-color:rgba(168,85,247,.25)"><div class="kpi-label">🕰️ Gammelt abo. ville have kostet</div><div class="kpi-value" style="color:#a855f7">${H.fKr(D.settings.oldSub*moCount)}</div><div class="kpi-sub">${H.fKr(D.settings.oldSub)} × ${moCount}</div></div>
+        <div class="kpi gb"><div class="kpi-label">🧾 Reel — forbrug</div><div class="kpi-value cg">${totProvKwh>0?H.fKwh(totProvKwh):'—'}</div><div class="kpi-sub">leverandørens tal</div></div>
+        <div class="kpi gb"><div class="kpi-label">🧾 Reel — betalt</div><div class="kpi-value">${totProvPrice>0?H.fKr(totProvPrice):'—'}</div><div class="kpi-sub">efter solcelle-fradrag</div></div>
+        <div class="kpi ${totProvSav>=0?'gb':'rb'}"><div class="kpi-label">🧾 Reel — besparelse</div><div class="kpi-value ${totProvSav>=0?'c-pos':'c-neg'}">${totProvSav!==0?(totProvSav>=0?'+':'')+H.fKr(totProvSav):'—'}</div><div class="kpi-sub">leverandørtal</div></div>
+      </div>
+    </div>`;
+
+    const thA='class="th-a"', thS='class="th-s"', thR='class="th-r"';
+    h += `<div class="card" style="padding:14px 16px"><div class="card-title">📅 Månedsoversigt — ${curYear}</div><div style="overflow-x:auto">
+    <table class="ytbl"><thead>
+      <tr>
+        <th rowspan="2" style="vertical-align:bottom">Md.</th>
+        <th colspan="3" ${thA} style="text-align:center;border-bottom:1px solid rgba(79,142,247,.2)">📱 Clever app</th>
+        <th colspan="2" ${thS} style="text-align:center;border-bottom:1px solid rgba(245,158,11,.2)">Fælles</th>
+        <th colspan="2" ${thA} style="text-align:center;border-bottom:1px solid rgba(79,142,247,.2)">App besparelse</th>
+        <th colspan="4" ${thR} style="text-align:center;border-bottom:1px solid rgba(34,197,94,.2)">🧾 Reel betaling</th>
+      </tr>
+      <tr>
+        <th ${thA}><span class="tip">kWh<span class="tip-i">i</span><span class="tip-b">Samlet kWh ladet — fra Clever-appen.</span></span></th>
+        <th ${thA}><span class="tip">Pris<span class="tip-i">i</span><span class="tip-b">Betalt ved laderen — excl. abo. og tillæg.</span></span></th>
+        <th ${thA}><span class="tip">Inkl.<span class="tip-i">i</span><span class="tip-b">Pris + Clever abo. (${H.fKr(D.settings.clever)}) + energitillæg.</span></span></th>
+        <th ${thS}><span class="tip">Energitillæg<span class="tip-i">i</span><span class="tip-b">Clever's ekstra sats × månedsforbrug.</span></span></th>
+        <th ${thS}>Km kørt</th>
+        <th ${thA}>Kr/km</th>
+        <th ${thA}>Vs. abo.</th>
+        <th ${thR}><span class="tip">Lev. kWh<span class="tip-i">i</span><span class="tip-b">kWh fra leverandørens regning — kan afvige pga. solceller.</span></span></th>
+        <th ${thR}><span class="tip">Lev. pris<span class="tip-i">i</span><span class="tip-b">Reelt betalt — efter solcelle-fradrag.</span></span></th>
+        <th ${thR}>Lev. kr/km</th>
+        <th ${thR}>Lev. vs. abo.</th>
+      </tr>
+    </thead><tbody>`;
+
+    calcs.forEach(c => {
+      const hasData = c.kWh>0||c.n>0;
+      const isCur   = c.ym===curMon;
+      const mon     = SHORT[+c.ym.split('-')[1]-1];
+      const isH     = !!D.historical[c.ym];
+      const provWithFee = c.pv ? c.pv.totalPrice+c.clever+c.eRate*c.pv.totalKwh : null;
+      const provKmCost  = provWithFee!=null&&c.km>0 ? provWithFee/c.km : null;
+      const provSav     = provWithFee!=null ? c.oldWithE-provWithFee : null;
+
+      h += `<tr class="${isCur?'cur':''} ${!hasData?'nd':''}">
+        <td><strong>${mon}</strong>${isH?' <span style="font-size:.6rem;color:var(--muted)">(h)</span>':''}</td>
+        <td>${hasData?`<span class="cn">${H.fKwh(c.kWh)}</span>`:'—'}</td>
+        <td>${hasData?`<span class="ca">${H.fKr(c.price)}</span>`:'—'}</td>
+        <td>${hasData?H.fKr(c.total):'—'}</td>
+        <td>${hasData&&c.eKr>0?`<span class="cr">${H.fKr(c.eKr)}</span><br><span style="font-size:.65rem;color:var(--muted)">${H.fRate(c.eRate)}</span>`:hasData?'—':'—'}</td>
+        <td>${c.km!=null?`<span class="cn">${H.fKm(c.km)}</span>`:'—'}</td>
+        <td>${c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
+        <td class="${hasData?(c.savings>=0?'c-pos':'c-neg'):''}">${hasData?(c.savings>=0?'+':'')+H.fKr(c.savings):'—'}</td>
+        <td>${c.pv?`<span class="cg">${H.fKwh(c.pv.totalKwh)}</span>`:'—'}</td>
+        <td>${c.pv?H.fKr(c.pv.totalPrice):'—'}</td>
+        <td>${provKmCost!=null?provKmCost.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
+        <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—'}</td>
+      </tr>`;
+    });
+
+    const totRow = calcs.reduce((a,c)=>a+c.price,0);
+    const totEKr = calcs.reduce((a,c)=>{const r=(D.energitillaeg||{})[c.ym]||0;return a+r*c.kWh;},0);
+    h += `</tbody><tfoot><tr>
+      <td>Total</td>
+      <td class="cn">${H.fKwh(totKwh)}</td><td class="ca">${H.fKr(totRow)}</td><td>${H.fKr(totTotal)}</td>
+      <td>${totEKr>0?`<span class="cr">${H.fKr(totEKr)}</span>`:'—'}</td>
+      <td>—</td><td>—</td>
+      <td class="${totSav>=0?'c-pos':'c-neg'}">${totSav>=0?'+':''}${H.fKr(totSav)}</td>
+      <td class="cg">${totProvKwh>0?H.fKwh(totProvKwh):'—'}</td>
+      <td>${totProvPrice>0?H.fKr(totProvPrice):'—'}</td><td>—</td>
+      <td class="${totProvSav>=0?'c-pos':'c-neg'}">${totProvSav!==0?(totProvSav>=0?'+':'')+H.fKr(totProvSav):'—'}</td>
+    </tr></tfoot></table></div></div>`;
+
+    return h;
+  },
+
+  // ── SETTINGS ──────────────────────────────────
+  settings() {
+    const clientId = localStorage.getItem('g_client_id') || '';
+    const clever   = String(D.settings.clever).replace('.',',');
+    const oldSub   = String(D.settings.oldSub).replace('.',',');
+    const hasFS    = 'showSaveFilePicker' in window;
+    let h = '';
+
+    // Google Drive
+    h += `<div class="card"><div class="card-title">🔗 Google Drive — Synkronisering</div>`;
+    if (Store.gUser) {
+      h += `<div class="alert a-ok" style="margin-bottom:12px">✅ Logget ind som <strong>${Store.gUser.name||Store.gUser.email}</strong></div>`;
+      h += `<div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-g" onclick="Store.syncNow()">↻ Synkroniser nu</button>
+        <button class="btn btn-g" onclick="Store.googleSignOut()">Log ud</button>
+      </div>`;
+    } else {
+      h += `<div style="font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.6">Log ind med Google for at synkronisere data på alle enheder inkl. telefon.</div>`;
+      h += `<div class="frow" style="margin-bottom:14px">
+        <div class="field"><label>Google Client ID</label>
+          <input class="fi" type="text" id="g_cid" value="${clientId}" placeholder="xxxx.apps.googleusercontent.com" style="width:360px">
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <button class="btn btn-p" onclick="App.saveClientId()">Gem Client ID</button>
+        </div>
+      </div>`;
+      h += `<button class="btn-google" onclick="App.googleSignIn()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Log ind med Google
+      </button>`;
+    }
+    h += `</div>`;
+
+    // Abonnementspriser
+    h += `<div class="card"><div class="card-title">⚙️ Abonnementspriser</div>
+      <div class="frow">
+        <div class="field"><label>📋 Clever abonnement (kr/md)</label>
+          <input class="fi" type="text" inputmode="decimal" id="set_c" value="${clever}" style="width:130px">
+          <span style="font-size:.68rem;color:var(--muted)">Fast månedlig udgift til Clever</span>
+        </div>
+        <div class="field"><label>🕰️ Gammelt abonnement (kr/md)</label>
+          <input class="fi" type="text" inputmode="decimal" id="set_o" value="${oldSub}" style="width:130px">
+          <span style="font-size:.68rem;color:var(--muted)">Bruges til besparelsesberegning</span>
+        </div>
+        <div class="field" style="justify-content:flex-end"><button class="btn btn-p" onclick="App.saveSettings()">Gem</button></div>
+      </div>
+    </div>`;
+
+    // C-drev
+    h += `<div class="card"><div class="card-title">💾 Datafil — C-drev</div>`;
+    if (hasFS) {
+      h += `<div class="alert a-ok" style="margin-bottom:12px">✅ Chrome/Edge understøtter direkte filgemning.</div>`;
+      h += `<div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-p" onclick="App.pickFile()">📁 ${Store.fileHandle?'Skift datafil':'Tilknyt datafil'}</button>
+        ${Store.fileHandle?`<button class="btn btn-g" onclick="Store.detachFile()">Frakobl</button>`:''}
+        <button class="btn btn-g" onclick="Store.backup()">💾 Manuel backup</button>
+      </div>`;
+    } else {
+      h += `<div class="alert a-warn" style="margin-bottom:12px">Brug Chrome eller Edge for direkte filgemning.</div>`;
+      h += `<button class="btn btn-g" onclick="Store.backup()">💾 Manuel JSON backup</button>`;
+    }
+    h += `</div>`;
+
+    // Farezone
+    h += `<div class="card"><div class="card-title" style="color:var(--red)">⚠️ Farezone</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-g" onclick="Store.importFile()">📥 Importer backup</button>
+        <button class="btn btn-d" onclick="Store.resetAll()">🗑️ Nulstil ALLE data</button>
+      </div>
+    </div>`;
+
+    return h;
+  },
+};
+
+// ═══════════════════════════════════════════════════
+//  APP ACTIONS
+// ═══════════════════════════════════════════════════
+const App = {
+  tab(t) {
+    activeTab = t;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.getElementById('tab-'+t).classList.add('active');
+    document.getElementById('content').innerHTML = '';
+    UI.render();
+  },
+
+  addYear() {
+    const y = prompt('Tilføj år (fx 2027):');
+    if (!y||!/^\d{4}$/.test(y.trim())) { alert('Ugyldigt årstal'); return; }
+    curYear = y.trim(); curMon = curYear+'-'+H.pad(new Date().getMonth()+1);
+    UI.render();
+  },
+
+  googleSignIn: () => Store.googleSignIn(),
+  pickFile:     () => Store.pickFile(),
+  backup:       () => Store.backup(),
+
+  saveClientId() {
+    const id = document.getElementById('g_cid').value.trim();
+    if (!id) { alert('Indsæt Client ID'); return; }
+    localStorage.setItem('g_client_id', id);
+    alert('Client ID gemt! Klik nu "Log ind med Google".');
+    UI.render();
+  },
+
+  addSess() {
+    const day   = parseInt(document.getElementById('ns_d').value);
+    const kwh   = H.pN(document.getElementById('ns_k').value);
+    const price = H.pN(document.getElementById('ns_p').value);
+    const loc   = document.getElementById('ns_l').value;
+    if (isNaN(day)||day<1||day>31) { alert('Ugyldig dag (1-31)'); return; }
+    if (isNaN(kwh)) { alert('Udfyld kWh'); return; }
+    D.sessions.push({ id:Date.now().toString(), date:`${curMon}-${H.pad(day)}`, kwh, price:isNaN(price)?0:price, location:loc });
+    Store.save(); UI.render();
+  },
+
+  delSess(id) { if(!confirm('Slet?'))return; D.sessions=D.sessions.filter(s=>s.id!==id); Store.save(); UI.render(); },
+
+  editSess(id) {
+    const s = D.sessions.find(x=>x.id===id); if(!s)return;
+    const row = document.getElementById('sr-'+id);
+    row.classList.add('editing');
+    row.innerHTML = `
+      <input class="fi" type="text" inputmode="numeric" value="${parseInt(s.date.split('-')[2])}" id="ed_d_${id}" style="width:55px">
+      <select class="fs" id="ed_l_${id}" style="width:110px"><option value="home" ${s.location==='home'?'selected':''}>🏠 Hjem</option><option value="public" ${s.location==='public'?'selected':''}>⚡ Off.</option></select>
+      <input class="fi" type="text" inputmode="decimal" value="${String(s.kwh).replace('.',',')}" id="ed_k_${id}" style="width:75px">
+      <input class="fi" type="text" inputmode="decimal" value="${String(s.price).replace('.',',')}" id="ed_p_${id}" style="width:85px">
+      <div class="acts">
+        <button class="btn btn-p btn-sm" onclick="App.saveEditSess('${id}')">Gem</button>
+        <button class="btn btn-g btn-sm" onclick="UI.render()">✕</button>
+      </div>`;
+  },
+
+  saveEditSess(id) {
+    const s = D.sessions.find(x=>x.id===id);
+    const day = parseInt(document.getElementById('ed_d_'+id).value);
+    if (isNaN(day)||day<1||day>31) { alert('Ugyldig dag'); return; }
+    s.date = s.date.slice(0,7)+'-'+H.pad(day);
+    s.location = document.getElementById('ed_l_'+id).value;
+    s.kwh   = H.pN(document.getElementById('ed_k_'+id).value)||0;
+e = H.pN(document.getElementById('ed_p_'+id).value)||0;
+    Store.save(); UI.render();
+  },
+
+  saveEnergi() {
+    const rate = H.pN(document.getElementById('enrg').value);
+    if (isNaN(rate)||rate<0) { alert('Ugyldig sats'); return; }
+    if (!D.energitillaeg) D.energitillaeg = {};
+    D.energitillaeg[curMon] = rate;
+    Store.save(); UI.render();
+  },
+
+  addOdo() {
+    const day = parseInt(document.getElementById('od_d').value);
+    const km  = H.pN(document.getElementById('od_k').value);
+    if (isNaN(day)||day<1||day>31) { alert('Ugyldig dag'); return; }
+    if (isNaN(km)) { alert('Angiv km stand'); return; }
+    D.odometer.push({ id:Date.now().toString(), month:curMon, date:`${curMon}-${H.pad(day)}`, km });
+    Store.save(); UI.render();
+  },
+
+  delOdo(id) { if(!confirm('Slet?'))return; D.odometer=D.odometer.filter(o=>o.id!==id); Store.save(); UI.render(); },
+
+  editOdo(id) {
+    const e = D.odometer.find(x=>x.id===id); if(!e)return;
+    const row = document.getElementById('od-'+e.id);
+    row.classList.add('editing');
+    row.innerHTML = `
+      <input class="fi" type="text" inputmode="numeric" value="${parseInt(e.date.split('-')[2])}" id="eo_d_${id}" style="width:55px">
+      <input class="fi" type="text" inputmode="numeric" value="${e.km}" id="eo_k_${id}" style="width:130px">
+      <div class="acts">
+        <button class="btn btn-p btn-sm" onclick="App.saveEditOdo('${id}')">Gem</button>
+        <button class="btn btn-g btn-sm" onclick="UI.render()">X</button>
+      </div>`;
+  },
+
+  saveEditOdo(id) {
+    const e = D.odometer.find(x=>x.id===id);
+    const day = parseInt(document.getElementById('eo_d_'+id).value);
+    if (isNaN(day)||day<1||day>31) { alert('Ugyldig dag'); return; }
+    e.date = e.month+'-'+H.pad(day);
+    e.km   = H.pN(document.getElementById('eo_k_'+id).value)||0;
+    Store.save(); UI.render();
+  },
+
+  calcPv() {
+    const k = H.pN(document.getElementById('pv_k').value)||0;
+    const a = H.pN(document.getElementById('pv_a').value)||0;
+    if (k&&a) document.getElementById('pv_t').value = (k*a).toFixed(2).replace('.',',');
+  },
+
+  savePv() {
+    const k = H.pN(document.getElementById('pv_k').value)||0;
+    const a = H.pN(document.getElementById('pv_a').value)||0;
+    const t = H.pN(document.getElementById('pv_t').value)||(k*a);
+    if (!k) { alert('Angiv kWh fra regningen'); return; }
+    D.provider[curMon] = { totalKwh:k, totalPrice:t };
+    Store.save(); UI.render();
+  },
+
+  delPv() { if(!confirm('Slet?'))return; delete D.provider[curMon]; Store.save(); UI.render(); },
+
+  saveHistorical() {
+    const kwh  = H.pN(document.getElementById('h_kwh').value)||0;
+    const price= H.pN(document.getElementById('h_price').value)||0;
+    const kmsV = document.getElementById('h_kms').value.trim();
+    const kmeV = document.getElementById('h_kme').value.trim();
+    D.historical[curMon] = { totalKwh:kwh, totalPrice:price, kmStart:kmsV?H.pN(kmsV):null, kmEnd:kmeV?H.pN(kmeV):null };
+    Store.save(); UI.render();
+  },
+
+  delHistorical() { if(!confirm('Slet?'))return; delete D.historical[curMon]; Store.save(); UI.render(); },
+
+  saveSettings() {
+    D.settings.clever = H.pN(document.getElementById('set_c').value)||50;
+    D.settings.oldSub = H.pN(document.getElementById('set_o').value)||799;
+    Store.save(); alert('Gemt!'); UI.render();
+  },
+};
+
+// BOOT
+(async () => {
+  await Store.init();
+  UI.banner();
+  UI.render();
+})();
+</script>
+
+</body></html>
