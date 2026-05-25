@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_8.html -->
+<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_9.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_04</span></div>
+    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_05</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -215,8 +215,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+611,98 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_8.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_8.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_9.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_9.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -411,6 +411,7 @@ const Store = {
       const r = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='ev_data.json'&fields=files(id)`, {
         headers: { Authorization: 'Bearer '+this.gToken }
       });
+      if (r.status === 401) { this._tokenExpired(); return false; }
       const j = await r.json();
       if (j.files && j.files.length) {
         this.gFileId = j.files[0].id;
@@ -418,12 +419,20 @@ const Store = {
         const dl = await fetch(`https://www.googleapis.com/drive/v3/files/${this.gFileId}?alt=media`, {
           headers: { Authorization: 'Bearer '+this.gToken }
         });
+        if (dl.status === 401) { this._tokenExpired(); return false; }
         D = sanitize(JSON.parse(await dl.text()));
         localStorage.setItem(LS_KEY, JSON.stringify(D));
         return true;
       }
       return false;
     } catch(e) { console.error('Drive load:', e); return false; }
+  },
+
+  _tokenExpired() {
+    this.gToken = null;
+    localStorage.removeItem('g_token');
+    UI.status('⚠️ Login udløbet — log ind igen');
+    UI.banner();
   },
 
   async driveSave() {
@@ -438,6 +447,7 @@ const Store = {
         : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
       const method = this.gFileId ? 'PATCH' : 'POST';
       const r = await fetch(url, { method, headers: { Authorization:'Bearer '+this.gToken, 'Content-Type':`multipart/related; boundary=${boundary}` }, body: multipart });
+      if (r.status === 401) { this._tokenExpired(); return false; }
       if (!r.ok) return false;
       if (!this.gFileId) { const j = await r.json(); this.gFileId = j.id; localStorage.setItem('g_fid', this.gFileId); }
       return true;
