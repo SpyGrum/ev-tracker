@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_7.html -->
+<!-- saved from url=(0044)file:///C:/Users/Mads/Downloads/index_8.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_03</span></div>
+    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_04</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -191,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <!-- MONTH NAV -->
 <div class="mon-nav">
   <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn active" title="Maj 2026">Maj</button><button class="m-btn future" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 24.05.2026</span>
+  <span class="today-lbl" id="todayLbl">I dag: 25.05.2026</span>
 </div>
 
 <!-- TABS -->
@@ -215,8 +215,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+611,98 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_7.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_7.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_8.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_8.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -331,7 +331,7 @@ const Store = {
     }).catch(() => null);
 
     // Restore Google state
-    this.gToken  = sessionStorage.getItem('g_token') || null;
+    this.gToken  = localStorage.getItem('g_token') || null;
     this.gFileId = localStorage.getItem('g_fid') || null;
     this.gUser   = (() => { try { return JSON.parse(localStorage.getItem('g_user')); } catch { return null; } })();
 
@@ -341,7 +341,7 @@ const Store = {
       if (ok) return;
       // Token expired
       this.gToken = null;
-      sessionStorage.removeItem('g_token');
+      localStorage.removeItem('g_token');
     }
 
     // Try local file handle
@@ -384,7 +384,7 @@ const Store = {
           const token = params.get('access_token');
           if (!token) return;
           this.gToken = token;
-          sessionStorage.setItem('g_token', this.gToken);
+          localStorage.setItem('g_token', this.gToken);
           try {
             const ui = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer '+this.gToken } });
             this.gUser = await ui.json();
@@ -399,7 +399,7 @@ const Store = {
 
   googleSignOut() {
     this.gToken = null; this.gFileId = null; this.gUser = null;
-    sessionStorage.removeItem('g_token');
+    localStorage.removeItem('g_token');
     localStorage.removeItem('g_fid');
     localStorage.removeItem('g_user');
     UI.banner();
