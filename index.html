@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/Mads/Downloads/index_10.html -->
+<!-- saved from url=(0045)file:///C:/Users/Mads/Downloads/index_14.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +163,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_06</span></div>
+    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_07</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -191,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <!-- MONTH NAV -->
 <div class="mon-nav">
   <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn active" title="Maj 2026">Maj</button><button class="m-btn future" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 25.05.2026</span>
+  <span class="today-lbl" id="todayLbl">I dag: 27.05.2026</span>
 </div>
 
 <!-- TABS -->
@@ -215,8 +215,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+611,98 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_10.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_10.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -361,8 +361,13 @@ const Store = {
   async save() {
     localStorage.setItem(LS_KEY, JSON.stringify(D));
     if (this.gToken) {
+      if (this.tokenExpired()) {
+        UI.status('🔄 Fornyer login...');
+        this.silentRefresh();
+        return;
+      }
       const ok = await this.driveSave();
-      UI.status(ok ? '✅ Gemt til Google Drive' : '⚠️ Drive-fejl');
+      UI.status(ok ? '✅ Gemt til Google Drive' : '⚠️ Drive-fejl — log ind igen');
     } else if (this.fileHandle) {
       const ok = await this._writeFile();
       UI.status(ok ? '✅ Gemt til fil' : '⚠️ Fil-fejl');
@@ -385,9 +390,11 @@ const Store = {
     if (!hash.includes('access_token')) return false;
     const params = new URLSearchParams(hash.substring(1));
     const token = params.get('access_token');
+    const expiresIn = parseInt(params.get('expires_in') || '3600');
     if (!token) return false;
     this.gToken = token;
     localStorage.setItem('g_token', token);
+    localStorage.setItem('g_token_exp', Date.now() + (expiresIn - 120) * 1000); // 2 min buffer
     history.replaceState(null, '', window.location.pathname);
     try {
       const ui = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer '+token } });
@@ -397,6 +404,21 @@ const Store = {
     await this.driveLoad();
     UI.banner(); UI.render();
     return true;
+  },
+
+  tokenExpired() {
+    const exp = parseInt(localStorage.getItem('g_token_exp') || '0');
+    return !this.gToken || (exp > 0 && Date.now() > exp);
+  },
+
+  silentRefresh() {
+    const clientId = localStorage.getItem('g_client_id');
+    if (!clientId) return;
+    const scope = 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+    const redirectUri = window.location.origin + window.location.pathname;
+    // Use prompt=none for silent refresh - if user is still logged into Google it works silently
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=none`;
+    window.location.href = url;
   },
 
   googleSignOut() {
@@ -458,6 +480,11 @@ const Store = {
 
   async syncNow() {
     if (!this.gToken) return;
+    if (this.tokenExpired()) {
+      UI.status('🔄 Fornyer login...');
+      this.silentRefresh();
+      return;
+    }
     UI.status('↻ Synkroniserer...');
     const ok = await this.driveLoad();
     UI.status(ok ? '✅ Synkroniseret' : '⚠️ Sync fejl');
