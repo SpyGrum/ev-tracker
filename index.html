@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/Mads/Downloads/index_14.html -->
+<!-- saved from url=(0051)file:///C:/Users/Mads/Downloads/index_v06_08_1.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,11 +163,11 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 22. maj 2026 &nbsp;·&nbsp; <span class="ver">v06_07</span></div>
+    <div class="hdr-sub">Genereret: 4. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_08</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
-    <button class="btn btn-g btn-sm" onclick="App.backup()">💾 Backup</button>
+    <button class="btn btn-g btn-sm" onclick="Store.saveToCloud()">☁️ Gem i sky</button>
   </div>
 </header>
 
@@ -190,8 +190,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 
 <!-- MONTH NAV -->
 <div class="mon-nav">
-  <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn active" title="Maj 2026">Maj</button><button class="m-btn future" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 27.05.2026</span>
+  <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn data" title="Maj 2026">Maj</button><button class="m-btn active" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
+  <span class="today-lbl" id="todayLbl">I dag: 04.06.2026</span>
 </div>
 
 <!-- TABS -->
@@ -205,41 +205,41 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 </div>
 
 <div class="main" id="mainWrap" style="max-width: 960px;">
-  <div id="content"><div class="card"><div class="card-title">📊 Maj 2026 — Månedsoversigt</div>
+  <div id="content"><div class="card"><div class="card-title">📊 Juni 2026 — Månedsoversigt</div>
     <div class="kpi-grid">
-      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">203,3 kWh</div><div class="kpi-sub">16 ladninger</div></div>
-      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">138,02 kr</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
-      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">187,02 kr</div><div class="kpi-sub">ladning + 49,00 kr abo.</div></div>
+      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">0,0 kWh</div><div class="kpi-sub">0 ladninger</div></div>
+      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">0,00 kr</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
+      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">49,00 kr</div><div class="kpi-sub">ladning + 49,00 kr abo.</div></div>
       <div class="kpi gb">
         <div class="kpi-label">Besparelse vs. gammelt abo.</div>
-        <div class="kpi-value c-pos">+611,98 kr</div>
+        <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_08_1.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_08_1.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
-        <div class="savings-track"><div class="savings-fill " style="width:76.59324155193993%"></div></div>
+        <div class="savings-track"><div class="savings-fill " style="width:93.86733416770964%"></div></div>
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:65px;text-align:right">799,00 kr</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-top:8px">
-        <span style="font-size:.7rem;color:var(--muted)">Din udgift: 187,02 kr</span>
-        <span style="font-size:.7rem;font-weight:700;color:var(--green)">SPAR 611,98 kr</span>
+        <span style="font-size:.7rem;color:var(--muted)">Din udgift: 49,00 kr</span>
+        <span style="font-size:.7rem;font-weight:700;color:var(--green)">SPAR 750,00 kr</span>
       </div>
     </div><div class="card"><div class="card-title">💳 Udgiftsfordeling</div>
       <div class="sec">📱 Clever app — registrerede udgifter</div>
       <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">138,02 kr</div><div class="kpi-sub">betalt ved lader</div></div>
+        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">0,00 kr</div><div class="kpi-sub">betalt ved lader</div></div>
         <div class="kpi"><div class="kpi-label">Clever abo.</div><div class="kpi-value" style="font-size:1.1rem">49,00 kr</div><div class="kpi-sub">fast månedlig</div></div>
         
-        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">187,02 kr</div><div class="kpi-sub">din reelle udgift</div></div>
+        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">49,00 kr</div><div class="kpi-sub">din reelle udgift</div></div>
       </div>
       <div class="divider"></div>
       <div class="sec">⚖️ Vs. gammelt abo. (799,00 kr/md)</div>
       <div class="kpi-grid">
         <div class="kpi"><div class="kpi-label">Gammelt abo. + tillæg</div><div class="kpi-value" style="font-size:1.1rem">799,00 kr</div><div class="kpi-sub">799,00 kr</div></div>
-        <div class="kpi gb"><div class="kpi-label">Din besparelse</div><div class="kpi-value c-pos" style="font-size:1.1rem">+611,98 kr</div><div class="kpi-sub">Du sparer</div></div>
+        <div class="kpi gb"><div class="kpi-label">Din besparelse</div><div class="kpi-value c-pos" style="font-size:1.1rem">+750,00 kr</div><div class="kpi-sub">Du sparer</div></div>
         
       </div>
     </div><div class="card"><div class="card-title">📁 Historisk samlede data</div>
@@ -403,6 +403,13 @@ const Store = {
     } catch(e) {}
     await this.driveLoad();
     UI.banner(); UI.render();
+    // Udfør evt. afventende handling efter login
+    const pending = localStorage.getItem('g_pending_action');
+    if (pending) {
+      localStorage.removeItem('g_pending_action');
+      if (pending === 'save') setTimeout(() => this.saveToCloud(), 300);
+      if (pending === 'fetch') setTimeout(() => this.fetchFromCloud(), 300);
+    }
     return true;
   },
 
@@ -416,9 +423,38 @@ const Store = {
     if (!clientId) return;
     const scope = 'https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
     const redirectUri = window.location.origin + window.location.pathname;
-    // Use prompt=none for silent refresh - if user is still logged into Google it works silently
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=none`;
-    window.location.href = url;
+    // Brug iframe så siden ikke redirectes — token fornyes i baggrunden
+    let iframe = document.getElementById('_silentRefreshFrame');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = '_silentRefreshFrame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+    iframe.onload = () => {
+      try {
+        const hash = iframe.contentWindow.location.hash;
+        if (hash && hash.includes('access_token')) {
+          const params = new URLSearchParams(hash.substring(1));
+          const token = params.get('access_token');
+          const expiresIn = parseInt(params.get('expires_in') || '3600');
+          if (token) {
+            this.gToken = token;
+            localStorage.setItem('g_token', token);
+            localStorage.setItem('g_token_exp', Date.now() + (expiresIn - 120) * 1000);
+            UI.status('✅ Login fornyet automatisk');
+          }
+        }
+      } catch(e) {
+        // cross-origin fejl = Google afviste silent — brugeren skal logge ind manuelt
+        this.gToken = null;
+        localStorage.removeItem('g_token');
+        UI.status('⚠️ Login udløbet — tryk Gem i sky for at logge ind igen');
+        UI.banner();
+      }
+    };
+    iframe.src = url;
   },
 
   googleSignOut() {
@@ -446,6 +482,7 @@ const Store = {
         if (dl.status === 401) { this._tokenExpired(); return false; }
         D = sanitize(JSON.parse(await dl.text()));
         localStorage.setItem(LS_KEY, JSON.stringify(D));
+        if (D._savedAt) localStorage.setItem('g_cloud_ts', D._savedAt);
         return true;
       }
       return false;
@@ -462,6 +499,8 @@ const Store = {
   async driveSave() {
     if (!this.gToken) return false;
     try {
+      D._savedAt = new Date().toISOString();
+      localStorage.setItem(LS_KEY, JSON.stringify(D));
       const body = JSON.stringify(D, null, 2);
       const boundary = 'EVT_BOUNDARY';
       const meta = this.gFileId ? '{}' : JSON.stringify({ name:'ev_data.json', parents:['appDataFolder'] });
@@ -490,6 +529,64 @@ const Store = {
     UI.status(ok ? '✅ Synkroniseret' : '⚠️ Sync fejl');
     if (ok) UI.render();
     UI.render();
+  },
+
+  // Gem i sky — med konfliktcheck og auto-login
+  async saveToCloud() {
+    if (!this.gToken || this.tokenExpired()) {
+      UI.status('🔑 Logger ind...');
+      localStorage.setItem('g_pending_action', 'save');
+      this.googleSignIn();
+      return;
+    }
+    // Hent sky-timestamp inden vi gemmer
+    UI.status('🔍 Tjekker sky...');
+    try {
+      const r = await fetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='ev_data.json'&fields=files(id)`, {
+        headers: { Authorization: 'Bearer '+this.gToken }
+      });
+      if (r.status === 401) { this._tokenExpired(); return; }
+      const j = await r.json();
+      if (j.files && j.files.length) {
+        const dl = await fetch(`https://www.googleapis.com/drive/v3/files/${j.files[0].id}?alt=media`, {
+          headers: { Authorization: 'Bearer '+this.gToken }
+        });
+        if (dl.ok) {
+          const cloudData = JSON.parse(await dl.text());
+          const cloudTs = cloudData._savedAt ? new Date(cloudData._savedAt) : null;
+          const localTs = D._savedAt ? new Date(D._savedAt) : null;
+          if (cloudTs && localTs && cloudTs > localTs) {
+            const cloudStr = cloudTs.toLocaleString('da-DK');
+            const localStr = localTs.toLocaleString('da-DK');
+            const ok = confirm(`⚠️ Sky-data er nyere!\n\nSky: ${cloudStr}\nLokal: ${localStr}\n\nVil du stadig overskrive sky med din lokale data?`);
+            if (!ok) { UI.status('❌ Gem annulleret'); return; }
+          }
+        }
+      }
+    } catch(e) { /* fortsæt alligevel */ }
+    UI.status('☁️ Gemmer til sky...');
+    const ok = await this.driveSave();
+    UI.status(ok ? '✅ Gemt i sky — '+new Date().toLocaleString('da-DK') : '⚠️ Gem fejlede');
+  },
+
+  // Hent fra sky — henter altid, viser timestamp
+  async fetchFromCloud() {
+    if (!this.gToken || this.tokenExpired()) {
+      UI.status('🔑 Logger ind...');
+      localStorage.setItem('g_pending_action', 'fetch');
+      this.googleSignIn();
+      return;
+    }
+    UI.status('⬇️ Henter fra sky...');
+    const ok = await this.driveLoad();
+    if (ok) {
+      const ts = D._savedAt ? new Date(D._savedAt).toLocaleString('da-DK') : 'ukendt tidspunkt';
+      UI.render();
+      UI.banner();
+      UI.status('✅ Hentet — gemt i sky: '+ts);
+    } else {
+      UI.status('⚠️ Hent fejlede — intet i sky?');
+    }
   },
 
   // Local file
@@ -711,8 +808,8 @@ const UI = {
     if (Store.gUser) {
       b.className='banner ok';
       bt.textContent='✅ Google Drive: '+(Store.gUser.name||Store.gUser.email);
-      bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.syncNow()">↻ Synk</button>
-                    <button class="btn btn-g btn-sm" onclick="Store.backup()">💾 Backup</button>
+      bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.saveToCloud()">☁️ Gem i sky</button>
+                    <button class="btn btn-g btn-sm" onclick="Store.fetchFromCloud()">⬇️ Hent fra sky</button>
                     <button class="btn btn-g btn-sm" onclick="Store.googleSignOut()">Log ud</button>`;
     } else if (Store.fileHandle) {
       b.className='banner ok';
