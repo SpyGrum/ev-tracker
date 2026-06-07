@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v06_09.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v06_10.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -171,7 +171,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 7. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_09</span></div>
+    <div class="hdr-sub">Genereret: 7. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_10</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -183,8 +183,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <div id="banner" class="banner warn">
   <span class="dot a"></span>
   <span id="bannerTxt">Ikke logget ind — data gemmes kun lokalt</span>
-  <div id="cloudTs" class="cloud-ts" style="display:none"></div>
-  <div id="bannerBtns" style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap"><button class="btn-google" onclick="App.googleSignIn()">
+  <div id="bannerBtns" style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn-google" onclick="App.googleSignIn()">
           <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path></svg>
           Log ind med Google
         </button>
@@ -224,8 +223,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_09.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_09.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_10.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_10.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -820,21 +819,21 @@ const UI = {
     const b  = document.getElementById('banner');
     const bt = document.getElementById('bannerTxt');
     const bb = document.getElementById('bannerBtns');
-    const ts = document.getElementById('cloudTs');
     if (!b) return;
     if (Store.gUser) {
       b.className='banner ok';
       bt.textContent='✅ Google Drive: '+(Store.gUser.name||Store.gUser.email);
       bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.saveToCloud()">☁️ Gem i sky</button>
                     <button class="btn btn-g btn-sm" onclick="Store.fetchFromCloud()">⬇️ Hent fra sky</button>
-                    <button class="btn btn-g btn-sm" onclick="Store.googleSignOut()">Log ud</button>`;
-      if (ts) { ts.style.display='flex'; this._updateCloudTs(); }
+                    <button class="btn btn-g btn-sm" onclick="Store.googleSignOut()">Log ud</button>
+                    <div id="cloudTs" class="cloud-ts"></div>`;
+      const ts = document.getElementById('cloudTs');
+      if (ts) this._updateCloudTs();
     } else if (Store.fileHandle) {
       b.className='banner ok';
       bt.textContent='✅ Fil: '+Store.fileHandle.name;
       bb.innerHTML=`<button class="btn btn-g btn-sm" onclick="Store.detachFile()">Frakobl</button>
                     <button class="btn btn-g btn-sm" onclick="Store.backup()">💾 Backup</button>`;
-      if (ts) ts.style.display='none';
     } else {
       b.className='banner warn';
       bt.textContent='Ikke logget ind — data gemmes kun lokalt';
@@ -843,7 +842,6 @@ const UI = {
           Log ind med Google
         </button>
         <button class="btn btn-g btn-sm" onclick="App.pickFile()">📁 C-drev</button>`;
-      if (ts) ts.style.display='none';
     }
   },
 
