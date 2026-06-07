@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v06_10.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v06_11.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -171,7 +171,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 7. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_10</span></div>
+    <div class="hdr-sub">Genereret: 7. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_11</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -223,8 +223,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_10.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_10.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_11.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_11.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -1153,6 +1153,7 @@ const UI = {
       </tr>
     </thead><tbody>`;
 
+    let runSav = 0, runProvSav = 0;
     calcs.forEach(c => {
       const hasData = c.kWh>0||c.n>0;
       const isCur   = c.ym===curMon;
@@ -1162,6 +1163,12 @@ const UI = {
       const provKmCost  = provWithFee!=null&&c.km>0 ? provWithFee/c.km : null;
       const provSav     = provWithFee!=null ? c.oldWithE-provWithFee : null;
 
+      if (hasData) runSav += c.savings;
+      if (provSav!=null) runProvSav += provSav;
+
+      const runSavTxt = hasData ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runSav>=0?'+':''}${H.fKr(runSav)}</span>` : '';
+      const runProvSavTxt = provSav!=null ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runProvSav>=0?'+':''}${H.fKr(runProvSav)}</span>` : '';
+
       h += `<tr class="${isCur?'cur':''} ${!hasData?'nd':''}">
         <td><strong>${mon}</strong>${isH?' <span style="font-size:.6rem;color:var(--muted)">(h)</span>':''}</td>
         <td>${hasData?`<span class="cn">${H.fKwh(c.kWh)}</span>`:'—'}</td>
@@ -1170,11 +1177,11 @@ const UI = {
         <td>${hasData&&c.eKr>0?`<span class="cr">${H.fKr(c.eKr)}</span><br><span style="font-size:.65rem;color:var(--muted)">${H.fRate(c.eRate)}</span>`:hasData?'—':'—'}</td>
         <td>${c.km!=null?`<span class="cn">${H.fKm(c.km)}</span>`:'—'}</td>
         <td>${c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
-        <td class="${hasData?(c.savings>=0?'c-pos':'c-neg'):''}">${hasData?(c.savings>=0?'+':'')+H.fKr(c.savings):'—'}</td>
+        <td class="${hasData?(c.savings>=0?'c-pos':'c-neg'):''}">${hasData?(c.savings>=0?'+':'')+H.fKr(c.savings)+runSavTxt:'—'}</td>
         <td>${c.pv?`<span class="cg">${H.fKwh(c.pv.totalKwh)}</span>`:'—'}</td>
         <td>${c.pv?H.fKr(c.pv.totalPrice):'—'}</td>
         <td>${provKmCost!=null?provKmCost.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
-        <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—'}</td>
+        <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav)+runProvSavTxt:'—'}</td>
       </tr>`;
     });
 
