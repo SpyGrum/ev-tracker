@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v06_12.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_00.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -149,6 +149,21 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .cloud-ts .ts-val.ok{color:var(--green);}
 .cloud-ts .ts-val.warn{color:var(--amber);}
 
+/* CALC POPUP */
+.cpop-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;display:flex;align-items:center;justify-content:center;}
+.cpop{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 22px;min-width:240px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.cpop-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;}
+.cpop-row{display:flex;justify-content:space-between;gap:16px;font-size:.78rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.cpop-row:last-child{border:none;}
+.cpop-lbl{color:var(--muted);}
+.cpop-val{font-family:monospace;color:var(--text);}
+.cpop-val.pos{color:var(--green);}
+.cpop-val.neg{color:var(--red);}
+.cpop-close{margin-top:12px;width:100%;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:var(--muted);cursor:pointer;font-size:.75rem;}
+.cpop-close:hover{background:rgba(255,255,255,.1);}
+.clickable-val{cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.2);transition:opacity .15s;}
+.clickable-val:hover{opacity:.75;}
+
 
 .divider{height:1px;background:var(--border);margin:14px 0;}
 .empty{text-align:center;padding:28px;font-size:.8rem;color:var(--muted);}
@@ -171,7 +186,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 7. jun 2026 &nbsp;·&nbsp; <span class="ver">v06_12</span></div>
+    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_00</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -198,8 +213,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 
 <!-- MONTH NAV -->
 <div class="mon-nav">
-  <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn data" title="Maj 2026">Maj</button><button class="m-btn active" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 09.06.2026</span>
+  <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn active" title="Maj 2026">Maj</button><button class="m-btn future" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
+  <span class="today-lbl" id="todayLbl">I dag: 27.05.2026</span>
 </div>
 
 <!-- TABS -->
@@ -213,41 +228,41 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 </div>
 
 <div class="main" id="mainWrap" style="max-width: 960px;">
-  <div id="content"><div class="card"><div class="card-title">📊 Juni 2026 — Månedsoversigt</div>
+  <div id="content"><div class="card"><div class="card-title">📊 Maj 2026 — Månedsoversigt</div>
     <div class="kpi-grid">
-      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">0,0 kWh</div><div class="kpi-sub">0 ladninger</div></div>
-      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">0,00 kr</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
-      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">49,00 kr</div><div class="kpi-sub">ladning + 49,00 kr abo.</div></div>
+      <div class="kpi nb"><div class="kpi-label">Samlet forbrug</div><div class="kpi-value cn">203,3 kWh</div><div class="kpi-sub">16 ladninger</div></div>
+      <div class="kpi"><div class="kpi-label">Pris ved lader</div><div class="kpi-value">138,02 kr</div><div class="kpi-sub">excl. abo. og tillæg</div></div>
+      <div class="kpi ab"><div class="kpi-label">Total inkl. Clever</div><div class="kpi-value ca">187,02 kr</div><div class="kpi-sub">ladning + 49,00 kr abo.</div></div>
       <div class="kpi gb">
         <div class="kpi-label">Besparelse vs. gammelt abo.</div>
-        <div class="kpi-value c-pos">+750,00 kr</div>
+        <div class="kpi-value c-pos">+611,98 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_12.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v06_12.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_14.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
-        <div class="savings-track"><div class="savings-fill " style="width:93.86733416770964%"></div></div>
+        <div class="savings-track"><div class="savings-fill " style="width:76.59324155193993%"></div></div>
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:65px;text-align:right">799,00 kr</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-top:8px">
-        <span style="font-size:.7rem;color:var(--muted)">Din udgift: 49,00 kr</span>
-        <span style="font-size:.7rem;font-weight:700;color:var(--green)">SPAR 750,00 kr</span>
+        <span style="font-size:.7rem;color:var(--muted)">Din udgift: 187,02 kr</span>
+        <span style="font-size:.7rem;font-weight:700;color:var(--green)">SPAR 611,98 kr</span>
       </div>
     </div><div class="card"><div class="card-title">💳 Udgiftsfordeling</div>
       <div class="sec">📱 Clever app — registrerede udgifter</div>
       <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">0,00 kr</div><div class="kpi-sub">betalt ved lader</div></div>
+        <div class="kpi"><div class="kpi-label">Ladning</div><div class="kpi-value" style="font-size:1.1rem">138,02 kr</div><div class="kpi-sub">betalt ved lader</div></div>
         <div class="kpi"><div class="kpi-label">Clever abo.</div><div class="kpi-value" style="font-size:1.1rem">49,00 kr</div><div class="kpi-sub">fast månedlig</div></div>
         
-        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">49,00 kr</div><div class="kpi-sub">din reelle udgift</div></div>
+        <div class="kpi ab"><div class="kpi-label">Samlet</div><div class="kpi-value ca" style="font-size:1.1rem">187,02 kr</div><div class="kpi-sub">din reelle udgift</div></div>
       </div>
       <div class="divider"></div>
       <div class="sec">⚖️ Vs. gammelt abo. (799,00 kr/md)</div>
       <div class="kpi-grid">
         <div class="kpi"><div class="kpi-label">Gammelt abo. + tillæg</div><div class="kpi-value" style="font-size:1.1rem">799,00 kr</div><div class="kpi-sub">799,00 kr</div></div>
-        <div class="kpi gb"><div class="kpi-label">Din besparelse</div><div class="kpi-value c-pos" style="font-size:1.1rem">+750,00 kr</div><div class="kpi-sub">Du sparer</div></div>
+        <div class="kpi gb"><div class="kpi-label">Din besparelse</div><div class="kpi-value c-pos" style="font-size:1.1rem">+611,98 kr</div><div class="kpi-sub">Du sparer</div></div>
         
       </div>
     </div><div class="card"><div class="card-title">📁 Historisk samlede data</div>
@@ -297,7 +312,9 @@ const LS_KEY = 'ev_tracker_v1'; // Same key as before — keeps existing data!
 function emptyData() {
   return {
     sessions: [], odometer: [], provider: {}, historical: {}, energitillaeg: {},
-    settings: { clever: 50, oldSub: 799 }
+    settings: { clever: 50, oldSub: 799 },
+    cleverHistory: [],   // [{from:'2026-01', amount:50}, ...]
+    oldSubHistory: [],   // [{from:'2026-01', amount:799}, ...]
   };
 }
 
@@ -311,7 +328,25 @@ function sanitize(d) {
   d.settings     = d.settings || {};
   d.settings.clever = d.settings.clever || 50;
   d.settings.oldSub = d.settings.oldSub || 799;
+  d.cleverHistory = Array.isArray(d.cleverHistory) ? d.cleverHistory : [];
+  d.oldSubHistory = Array.isArray(d.oldSubHistory) ? d.oldSubHistory : [];
   return d;
+}
+
+// Hent abo-sats for en given måned (ym = '2026-09')
+function getClever(ym) {
+  if (!D.cleverHistory.length) return D.settings.clever;
+  const sorted = [...D.cleverHistory].sort((a,b)=>a.from.localeCompare(b.from));
+  let val = D.settings.clever;
+  for (const e of sorted) { if (e.from <= ym) val = e.amount; }
+  return val;
+}
+function getOldSub(ym) {
+  if (!D.oldSubHistory.length) return D.settings.oldSub;
+  const sorted = [...D.oldSubHistory].sort((a,b)=>a.from.localeCompare(b.from));
+  let val = D.settings.oldSub;
+  for (const e of sorted) { if (e.from <= ym) val = e.amount; }
+  return val;
 }
 
 let D = (() => {
@@ -404,6 +439,14 @@ const Store = {
       localStorage.setItem('g_user', JSON.stringify(this.gUser));
     } catch(e) {}
     await this.driveLoad();
+    // Hvis pending=save, brug lokale data frem for sky-data
+    const pendingCheck = localStorage.getItem('g_pending_action');
+    if (pendingCheck === 'save') {
+      const local = localStorage.getItem(LS_KEY);
+      if (local) { try { D = sanitize(JSON.parse(local)); } catch(e){} }
+    } else {
+      await this.driveLoad();
+    }
     UI.banner(); UI.render();
     // Udfør evt. afventende handling efter login
     const pending = localStorage.getItem('g_pending_action');
@@ -722,9 +765,10 @@ const Calc = {
 
     const eRate     = (D.energitillaeg||{})[ym] || 0;
     const eKr       = eRate * kWh;
-    const clever    = D.settings.clever;
+    const clever    = getClever(ym);
+    const oldSub    = getOldSub(ym);
     const total     = price + clever;
-    const oldWithE  = D.settings.oldSub + eKr;
+    const oldWithE  = oldSub + eKr;
     const savings   = oldWithE - total;
 
     // Km
@@ -741,7 +785,26 @@ const Calc = {
     const pv = D.provider[ym] || null;
     const provDiff = pv ? { kwhDiff: kWh-pv.totalKwh, priceDiff: price-pv.totalPrice } : null;
 
-    return { kWh, price, eRate, eKr, clever, total, oldWithE, savings, km, krKm, isHist, n: sess.length, pv, provDiff };
+    // Breakdown til popup — regnestykke bag hvert tal
+    const breakdown = {
+      kWh:     `Sessioner summeret: ${H.fKwh(kWh)}`,
+      price:   `Betalt ved lader: ${H.fKr(price)}`,
+      eKr:     `${H.fRate(eRate)} × ${H.fKwh(kWh)} = ${H.fKr(eKr)}`,
+      total:   `Lader: ${H.fKr(price)} + Clever abo.: ${H.fKr(clever)} = ${H.fKr(total)}`,
+      oldWithE:`Gammelt abo.: ${H.fKr(oldSub)}${eKr>0?' + tillæg: '+H.fKr(eKr):''} = ${H.fKr(oldWithE)}`,
+      savings: `Gammelt abo.+tillæg: ${H.fKr(oldWithE)}\n− Lader: ${H.fKr(price)}\n− Clever abo.: ${H.fKr(clever)}\n= ${H.fKr(savings)}`,
+      krKm:    km!=null ? `${H.fKr(total)} ÷ ${H.fKm(km)} = ${krKm!=null?krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr/km':'—'}` : 'Mangler km-stand',
+    };
+    if (pv) {
+      const provWithFee = pv.totalPrice + clever + eRate * pv.totalKwh;
+      const provSav = oldWithE - provWithFee;
+      const provSavInclAbo = oldSub - pv.totalPrice - clever;
+      breakdown.provSav    = `Gammelt abo.+tillæg: ${H.fKr(oldWithE)}\n− Lev. pris: ${H.fKr(pv.totalPrice)}\n− Clever abo.: ${H.fKr(clever)}\n= ${H.fKr(provSav)}`;
+      breakdown.provSavInclAbo = `Gammelt abo.: ${H.fKr(oldSub)}\n− Lev. pris: ${H.fKr(pv.totalPrice)}\n− Clever abo.: ${H.fKr(clever)}\n= ${H.fKr(provSavInclAbo)}`;
+      breakdown.provKmCost = pv && km!=null ? `${H.fKr(provWithFee)} ÷ ${H.fKm(km)}` : 'Mangler km';
+    }
+
+    return { kWh, price, eRate, eKr, clever, oldSub, total, oldWithE, savings, km, krKm, isHist, n: sess.length, pv, provDiff, breakdown };
   },
 };
 
@@ -841,7 +904,19 @@ const UI = {
     }
   },
 
-  _updateCloudTs(overrideCloud, overrideLocal, cloudOk, localOk) {
+  showCalc(title, rows) {
+    const existing = document.getElementById('_cpopOverlay');
+    if (existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.id = '_cpopOverlay';
+    overlay.className = 'cpop-overlay';
+    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
+    const rowsHtml = rows.map(r =>
+      `<div class="cpop-row"><span class="cpop-lbl">${r.label}</span><span class="cpop-val ${r.cls||''}">${r.val}</span></div>`
+    ).join('');
+    overlay.innerHTML = `<div class="cpop"><div class="cpop-title">${title}</div>${rowsHtml}<button class="cpop-close" onclick="document.getElementById('_cpopOverlay').remove()">Luk</button></div>`;
+    document.body.appendChild(overlay);
+  },
     const el = document.getElementById('cloudTs');
     if (!el) return;
     const fmt = iso => iso ? new Date(iso).toLocaleString('da-DK', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
@@ -1155,12 +1230,12 @@ const UI = {
         <th colspan="3" ${thA} style="text-align:center;border-bottom:1px solid rgba(79,142,247,.2)">📱 Clever app</th>
         <th colspan="2" ${thS} style="text-align:center;border-bottom:1px solid rgba(245,158,11,.2)">Fælles</th>
         <th colspan="2" ${thA} style="text-align:center;border-bottom:1px solid rgba(79,142,247,.2)">App besparelse</th>
-        <th colspan="4" ${thR} style="text-align:center;border-bottom:1px solid rgba(34,197,94,.2)">🧾 Reel betaling</th>
+        <th colspan="5" ${thR} style="text-align:center;border-bottom:1px solid rgba(34,197,94,.2)">🧾 Reel betaling</th>
       </tr>
       <tr>
         <th ${thA}><span class="tip">kWh<span class="tip-i">i</span><span class="tip-b">Samlet kWh ladet — fra Clever-appen.</span></span></th>
         <th ${thA}><span class="tip">Pris<span class="tip-i">i</span><span class="tip-b">Betalt ved laderen — excl. abo. og tillæg.</span></span></th>
-        <th ${thA}><span class="tip">Inkl.<span class="tip-i">i</span><span class="tip-b">Pris + Clever abo. (${H.fKr(D.settings.clever)}) + energitillæg.</span></span></th>
+        <th ${thA}><span class="tip">Inkl.<span class="tip-i">i</span><span class="tip-b">Pris + Clever abo. + energitillæg.</span></span></th>
         <th ${thS}><span class="tip">Energitillæg<span class="tip-i">i</span><span class="tip-b">Clever's ekstra sats × månedsforbrug.</span></span></th>
         <th ${thS}>Km kørt</th>
         <th ${thA}>Kr/km</th>
@@ -1168,44 +1243,57 @@ const UI = {
         <th ${thR}><span class="tip">Lev. kWh<span class="tip-i">i</span><span class="tip-b">kWh fra leverandørens regning — kan afvige pga. solceller.</span></span></th>
         <th ${thR}><span class="tip">Lev. pris<span class="tip-i">i</span><span class="tip-b">Reelt betalt — efter solcelle-fradrag.</span></span></th>
         <th ${thR}>Lev. kr/km</th>
-        <th ${thR}>Lev. vs. abo.</th>
+        <th ${thR}><span class="tip">Lev. vs. abo.<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − (lev. pris + Clever abo. + energitillæg).</span></span></th>
+        <th ${thR}><span class="tip">Lev. vs. abo. (u. abo.)<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − lev. pris − Clever abo. Viser reel besparelse når Clever abo. er fratrukket.</span></span></th>
       </tr>
     </thead><tbody>`;
 
-    let runSav = 0, runProvSav = 0;
+    let runSav = 0, runProvSav = 0, runProvSavIA = 0;
     calcs.forEach(c => {
       const hasData = c.kWh>0||c.n>0;
       const isCur   = c.ym===curMon;
       const mon     = SHORT[+c.ym.split('-')[1]-1];
       const isH     = !!D.historical[c.ym];
-      const provWithFee = c.pv ? c.pv.totalPrice+c.clever+c.eRate*c.pv.totalKwh : null;
-      const provKmCost  = provWithFee!=null&&c.km>0 ? provWithFee/c.km : null;
-      const provSav     = provWithFee!=null ? c.oldWithE-provWithFee : null;
+      const provWithFee    = c.pv ? c.pv.totalPrice+c.clever+c.eRate*c.pv.totalKwh : null;
+      const provKmCost     = provWithFee!=null&&c.km>0 ? provWithFee/c.km : null;
+      const provSav        = provWithFee!=null ? c.oldWithE-provWithFee : null;
+      const provSavInclAbo = c.pv ? c.oldSub - c.pv.totalPrice - c.clever : null;
 
       if (hasData) runSav += c.savings;
       if (provSav!=null) runProvSav += provSav;
+      if (provSavInclAbo!=null) runProvSavIA += provSavInclAbo;
 
-      const runSavTxt = hasData ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runSav>=0?'+':''}${H.fKr(runSav)}</span>` : '';
-      const runProvSavTxt = provSav!=null ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runProvSav>=0?'+':''}${H.fKr(runProvSav)}</span>` : '';
+      const cv = (txt, bd, cls='') => `<span class="clickable-val ${cls}" onclick='UI.showCalc(${JSON.stringify(mon)},${JSON.stringify(bd)})'>${txt}</span>`;
+      const runSavTxt       = hasData   ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runSav>=0?'+':''}${H.fKr(runSav)}</span>` : '';
+      const runProvSavTxt   = provSav!=null ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runProvSav>=0?'+':''}${H.fKr(runProvSav)}</span>` : '';
+      const runProvSavIATxt = provSavInclAbo!=null ? `<br><span style="font-size:.62rem;color:var(--muted);font-weight:400">${runProvSavIA>=0?'+':''}${H.fKr(runProvSavIA)}</span>` : '';
+
+      const bdSav    = c.breakdown ? [{label:'Gammelt abo.+tillæg',val:H.fKr(c.oldWithE)},{label:'− Lader',val:H.fKr(c.price)},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Besparelse',val:(c.savings>=0?'+':'')+H.fKr(c.savings),cls:c.savings>=0?'pos':'neg'}] : [];
+      const bdTotal  = c.breakdown ? [{label:'Lader',val:H.fKr(c.price)},{label:'+ Clever abo.',val:H.fKr(c.clever)},{label:'= Total',val:H.fKr(c.total)}] : [];
+      const bdKrKm   = c.breakdown ? [{label:'Total',val:H.fKr(c.total)},{label:'÷ Km kørt',val:c.km!=null?H.fKm(c.km):'—'},{label:'= Kr/km',val:c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}] : [];
+      const bdProvSav= c.breakdown?.provSav ? [{label:'Gammelt abo.+tillæg',val:H.fKr(c.oldWithE)},{label:'− Lev. pris',val:c.pv?H.fKr(c.pv.totalPrice):'—'},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Besparelse',val:provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—',cls:provSav!=null?(provSav>=0?'pos':'neg'):''}] : [];
+      const bdProvSavIA = c.pv ? [{label:'Gammelt abo.',val:H.fKr(c.oldSub)},{label:'− Lev. pris',val:H.fKr(c.pv.totalPrice)},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Reel besparelse',val:provSavInclAbo!=null?(provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo):'—',cls:provSavInclAbo!=null?(provSavInclAbo>=0?'pos':'neg'):''}] : [];
 
       h += `<tr class="${isCur?'cur':''} ${!hasData?'nd':''}">
         <td><strong>${mon}</strong>${isH?' <span style="font-size:.6rem;color:var(--muted)">(h)</span>':''}</td>
         <td>${hasData?`<span class="cn">${H.fKwh(c.kWh)}</span>`:'—'}</td>
         <td>${hasData?`<span class="ca">${H.fKr(c.price)}</span>`:'—'}</td>
-        <td>${hasData?H.fKr(c.total):'—'}</td>
+        <td>${hasData?cv(H.fKr(c.total),bdTotal):'—'}</td>
         <td>${hasData&&c.eKr>0?`<span class="cr">${H.fKr(c.eKr)}</span><br><span style="font-size:.65rem;color:var(--muted)">${H.fRate(c.eRate)}</span>`:hasData?'—':'—'}</td>
         <td>${c.km!=null?`<span class="cn">${H.fKm(c.km)}</span>`:'—'}</td>
-        <td>${c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
-        <td class="${hasData?(c.savings>=0?'c-pos':'c-neg'):''}">${hasData?(c.savings>=0?'+':'')+H.fKr(c.savings)+runSavTxt:'—'}</td>
+        <td>${c.krKm!=null?cv(c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr',bdKrKm):'—'}</td>
+        <td class="${hasData?(c.savings>=0?'c-pos':'c-neg'):''}">${hasData?cv((c.savings>=0?'+':'')+H.fKr(c.savings),bdSav,c.savings>=0?'':'c-neg')+runSavTxt:'—'}</td>
         <td>${c.pv?`<span class="cg">${H.fKwh(c.pv.totalKwh)}</span>`:'—'}</td>
         <td>${c.pv?H.fKr(c.pv.totalPrice):'—'}</td>
         <td>${provKmCost!=null?provKmCost.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
-        <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav)+runProvSavTxt:'—'}</td>
+        <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?cv((provSav>=0?'+':'')+H.fKr(provSav),bdProvSav,provSav>=0?'':'c-neg')+runProvSavTxt:'—'}</td>
+        <td class="${provSavInclAbo!=null?(provSavInclAbo>=0?'c-pos':'c-neg'):''}">${provSavInclAbo!=null?cv((provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo),bdProvSavIA,provSavInclAbo>=0?'':'c-neg')+runProvSavIATxt:'—'}</td>
       </tr>`;
     });
 
     const totRow = calcs.reduce((a,c)=>a+c.price,0);
     const totEKr = calcs.reduce((a,c)=>{const r=(D.energitillaeg||{})[c.ym]||0;return a+r*c.kWh;},0);
+    const totProvSavIA = calcs.reduce((a,c)=>{ if(!c.pv) return a; return a+(c.oldSub-c.pv.totalPrice-c.clever); },0);
     h += `</tbody><tfoot><tr>
       <td>Total</td>
       <td class="cn">${H.fKwh(totKwh)}</td><td class="ca">${H.fKr(totRow)}</td><td>${H.fKr(totTotal)}</td>
@@ -1215,6 +1303,7 @@ const UI = {
       <td class="cg">${totProvKwh>0?H.fKwh(totProvKwh):'—'}</td>
       <td>${totProvPrice>0?H.fKr(totProvPrice):'—'}</td><td>—</td>
       <td class="${totProvSav>=0?'c-pos':'c-neg'}">${totProvSav!==0?(totProvSav>=0?'+':'')+H.fKr(totProvSav):'—'}</td>
+      <td class="${totProvSavIA>=0?'c-pos':'c-neg'}">${totProvSavIA!==0?(totProvSavIA>=0?'+':'')+H.fKr(totProvSavIA):'—'}</td>
     </tr></tfoot></table></div></div>`;
 
     return h;
@@ -1253,18 +1342,49 @@ const UI = {
     }
     h += `</div>`;
 
-    // Abonnementspriser
+    // Abonnementspriser med historik
+    const fmtAboList = (hist, defaultVal, label) => {
+      if (!hist.length) return `<div style="font-size:.75rem;color:var(--muted)">Ingen historik — bruger standard: ${H.fKr(defaultVal)}/md</div>`;
+      return hist.slice().sort((a,b)=>a.from.localeCompare(b.from)).map((e,i) =>
+        `<div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="font-family:monospace;font-size:.75rem;min-width:75px;color:var(--muted)">Fra ${e.from.slice(0,7)}</span>
+          <span style="font-family:monospace;font-size:.82rem">${H.fKr(e.amount)}/md</span>
+          <button class="btn btn-d btn-sm" onclick="App.delAbo('${label}',${i})" style="margin-left:auto">✕</button>
+        </div>`
+      ).join('');
+    };
+
     h += `<div class="card"><div class="card-title">⚙️ Abonnementspriser</div>
-      <div class="frow">
-        <div class="field"><label>📋 Clever abonnement (kr/md)</label>
-          <input class="fi" type="text" inputmode="decimal" id="set_c" value="${clever}" style="width:130px">
-          <span style="font-size:.68rem;color:var(--muted)">Fast månedlig udgift til Clever</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
+
+        <div>
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px">📋 Clever abonnement</div>
+          ${fmtAboList(D.cleverHistory, D.settings.clever, 'clever')}
+          <div class="frow" style="margin-top:10px;gap:8px">
+            <div class="field"><label>Fra måned (fx 2026-09)</label><input class="fi" type="text" id="abo_c_from" placeholder="2026-09" style="width:100px"></div>
+            <div class="field"><label>Kr/md</label><input class="fi" type="text" inputmode="decimal" id="abo_c_amt" placeholder="60" style="width:80px"></div>
+            <div class="field" style="justify-content:flex-end"><button class="btn btn-p btn-sm" onclick="App.addAbo('clever')">Tilføj</button></div>
+          </div>
+          <div style="font-size:.68rem;color:var(--muted);margin-top:6px">Standard (bruges hvis ingen historik): 
+            <input class="fi" type="text" inputmode="decimal" id="set_c" value="${clever}" style="width:70px;display:inline-block;padding:2px 6px">
+            <button class="btn btn-g btn-sm" onclick="App.saveSettings()" style="display:inline-block">Gem</button>
+          </div>
         </div>
-        <div class="field"><label>🕰️ Gammelt abonnement (kr/md)</label>
-          <input class="fi" type="text" inputmode="decimal" id="set_o" value="${oldSub}" style="width:130px">
-          <span style="font-size:.68rem;color:var(--muted)">Bruges til besparelsesberegning</span>
+
+        <div>
+          <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px">🕰️ Gammelt abonnement</div>
+          ${fmtAboList(D.oldSubHistory, D.settings.oldSub, 'oldSub')}
+          <div class="frow" style="margin-top:10px;gap:8px">
+            <div class="field"><label>Fra måned (fx 2026-09)</label><input class="fi" type="text" id="abo_o_from" placeholder="2026-09" style="width:100px"></div>
+            <div class="field"><label>Kr/md</label><input class="fi" type="text" inputmode="decimal" id="abo_o_amt" placeholder="849" style="width:80px"></div>
+            <div class="field" style="justify-content:flex-end"><button class="btn btn-p btn-sm" onclick="App.addAbo('oldSub')">Tilføj</button></div>
+          </div>
+          <div style="font-size:.68rem;color:var(--muted);margin-top:6px">Standard (bruges hvis ingen historik): 
+            <input class="fi" type="text" inputmode="decimal" id="set_o" value="${oldSub}" style="width:70px;display:inline-block;padding:2px 6px">
+            <button class="btn btn-g btn-sm" onclick="App.saveSettings()" style="display:inline-block">Gem</button>
+          </div>
         </div>
-        <div class="field" style="justify-content:flex-end"><button class="btn btn-p" onclick="App.saveSettings()">Gem</button></div>
+
       </div>
     </div>`;
 
@@ -1438,6 +1558,29 @@ e = H.pN(document.getElementById('ed_p_'+id).value)||0;
     D.settings.clever = H.pN(document.getElementById('set_c').value)||50;
     D.settings.oldSub = H.pN(document.getElementById('set_o').value)||799;
     Store.save(); alert('Gemt!'); UI.render();
+  },
+
+  addAbo(type) {
+    const fromEl = document.getElementById(`abo_${type==='clever'?'c':'o'}_from`);
+    const amtEl  = document.getElementById(`abo_${type==='clever'?'c':'o'}_amt`);
+    const from   = fromEl.value.trim();
+    const amount = H.pN(amtEl.value);
+    if (!/^\d{4}-\d{2}$/.test(from)) { alert('Brug format: 2026-09'); return; }
+    if (isNaN(amount)||amount<=0) { alert('Ugyldig beløb'); return; }
+    const key = type==='clever' ? 'cleverHistory' : 'oldSubHistory';
+    if (!D[key]) D[key] = [];
+    // Overskriv hvis samme måned allerede findes
+    const idx = D[key].findIndex(e=>e.from===from);
+    if (idx>=0) D[key][idx].amount = amount;
+    else D[key].push({from, amount});
+    Store.save(); UI.render();
+  },
+
+  delAbo(type, idx) {
+    if (!confirm('Slet denne periode?')) return;
+    const key = type==='clever' ? 'cleverHistory' : 'oldSubHistory';
+    D[key].splice(idx, 1);
+    Store.save(); UI.render();
   },
 };
 
