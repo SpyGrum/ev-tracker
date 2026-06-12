@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_01.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_02.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -186,7 +186,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_01</span></div>
+    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_02</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -238,8 +238,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_01.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_01.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_02.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_02.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -796,9 +796,9 @@ const Calc = {
     };
     if (pv) {
       const provWithFee = pv.totalPrice + clever + eRate * pv.totalKwh;
-      const provSav = oldWithE - provWithFee;
-      const provSavInclAbo = oldSub - pv.totalPrice - clever;
-      breakdown.provSav    = `Gammelt abo.+tillæg: ${H.fKr(oldWithE)}\n− Lev. pris: ${H.fKr(pv.totalPrice)}\n− Clever abo.: ${H.fKr(clever)}\n= ${H.fKr(provSav)}`;
+      const provSav = oldSub - pv.totalPrice; // gammelt abo − lev. pris (uden Clever abo)
+      const provSavInclAbo = oldSub - pv.totalPrice - clever; // − Clever abo også
+      breakdown.provSav    = `Gammelt abo.: ${H.fKr(oldSub)}\n− Lev. pris: ${H.fKr(pv.totalPrice)}\n= ${H.fKr(provSav)}`;
       breakdown.provSavInclAbo = `Gammelt abo.: ${H.fKr(oldSub)}\n− Lev. pris: ${H.fKr(pv.totalPrice)}\n− Clever abo.: ${H.fKr(clever)}\n= ${H.fKr(provSavInclAbo)}`;
       breakdown.provKmCost = pv && km!=null ? `${H.fKr(provWithFee)} ÷ ${H.fKm(km)}` : 'Mangler km';
     }
@@ -1216,7 +1216,7 @@ const UI = {
     const totProvKwh  = calcs.reduce((a,c)=>a+(c.pv?c.pv.totalKwh:0),0);
     const totProvPrice= calcs.reduce((a,c)=>a+(c.pv?c.pv.totalPrice:0),0);
     const totEnergi   = calcs.reduce((a,c)=>a+c.eKr,0);
-    const totProvSav  = calcs.reduce((a,c)=>{if(!c.pv)return a;return a+(c.oldWithE-(c.pv.totalPrice+c.clever));},0);
+    const totProvSav  = calcs.reduce((a,c)=>{ if(!c.pv) return a; return a+(c.oldSub-c.pv.totalPrice); },0);
 
     let h = `<div class="card"><div class="card-title">📈 ${curYear} — Årsresultat</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px;align-items:stretch">
@@ -1251,8 +1251,8 @@ const UI = {
         <th ${thR}><span class="tip">Lev. kWh<span class="tip-i">i</span><span class="tip-b">kWh fra leverandørens regning — kan afvige pga. solceller.</span></span></th>
         <th ${thR}><span class="tip">Lev. pris<span class="tip-i">i</span><span class="tip-b">Reelt betalt — efter solcelle-fradrag.</span></span></th>
         <th ${thR}>Lev. kr/km</th>
-        <th ${thR}><span class="tip">Lev. vs. abo.<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − (lev. pris + Clever abo. + energitillæg).</span></span></th>
-        <th ${thR}><span class="tip">Lev. vs. abo. (u. abo.)<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − lev. pris − Clever abo. Viser reel besparelse når Clever abo. er fratrukket.</span></span></th>
+        <th ${thR}><span class="tip">Lev. vs. abo.<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − lev. pris. Hvad elselskabet koster vs. gammelt abo.</span></span></th>
+        <th ${thR}><span class="tip">Lev. vs. abo. (inkl. Clever)<span class="tip-i">i</span><span class="tip-b">Gammelt abo. − lev. pris − Clever abo. Din reelle samlede besparelse.</span></span></th>
       </tr>
     </thead><tbody>`;
 
@@ -1264,8 +1264,8 @@ const UI = {
       const isH     = !!D.historical[c.ym];
       const provWithFee    = c.pv ? c.pv.totalPrice+c.clever+c.eRate*c.pv.totalKwh : null;
       const provKmCost     = provWithFee!=null&&c.km>0 ? provWithFee/c.km : null;
-      const provSav        = provWithFee!=null ? c.oldWithE-provWithFee : null;
-      const provSavInclAbo = c.pv ? c.oldSub - c.pv.totalPrice - c.clever : null;
+      const provSav        = c.pv ? c.oldSub - c.pv.totalPrice : null; // gammelt abo − lev. pris
+      const provSavInclAbo = c.pv ? c.oldSub - c.pv.totalPrice - c.clever : null; // − Clever abo også
 
       if (hasData) runSav += c.savings;
       if (provSav!=null) runProvSav += provSav;
@@ -1356,13 +1356,16 @@ const UI = {
     // Abonnementspriser med historik
     const fmtAboList = (hist, defaultVal, label) => {
       if (!hist.length) return `<div style="font-size:.75rem;color:var(--muted)">Ingen historik — bruger standard: ${H.fKr(defaultVal)}/md</div>`;
-      return hist.slice().sort((a,b)=>a.from.localeCompare(b.from)).map((e,i) =>
-        `<div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-          <span style="font-family:monospace;font-size:.75rem;min-width:75px;color:var(--muted)">Fra ${e.from.slice(0,7)}</span>
+      const sorted = hist.slice().sort((a,b)=>a.from.localeCompare(b.from));
+      return sorted.map((e,i) => {
+        const nextFrom = sorted[i+1] ? sorted[i+1].from : null;
+        const period = nextFrom ? `${e.from} → ${nextFrom}` : `${e.from} → nu`;
+        return `<div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+          <span style="font-family:monospace;font-size:.75rem;min-width:120px;color:var(--muted)">${period}</span>
           <span style="font-family:monospace;font-size:.82rem">${H.fKr(e.amount)}/md</span>
           <button class="btn btn-d btn-sm" onclick="App.delAbo('${label}',${i})" style="margin-left:auto">✕</button>
-        </div>`
-      ).join('');
+        </div>`;
+      }).join('');
     };
 
     h += `<div class="card"><div class="card-title">⚙️ Abonnementspriser</div>
