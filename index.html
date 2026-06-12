@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_02.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_03.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -186,7 +186,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_02</span></div>
+    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_03</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -238,8 +238,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_02.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_02.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_03.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_03.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -1282,7 +1282,7 @@ const UI = {
       const bdSav    = c.breakdown ? [{label:'Gammelt abo.+tillæg',val:H.fKr(c.oldWithE)},{label:'− Lader',val:H.fKr(c.price)},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Besparelse',val:(c.savings>=0?'+':'')+H.fKr(c.savings),cls:c.savings>=0?'pos':'neg'}] : [];
       const bdTotal  = c.breakdown ? [{label:'Lader',val:H.fKr(c.price)},{label:'+ Clever abo.',val:H.fKr(c.clever)},{label:'= Total',val:H.fKr(c.total)}] : [];
       const bdKrKm   = c.breakdown ? [{label:'Total',val:H.fKr(c.total)},{label:'÷ Km kørt',val:c.km!=null?H.fKm(c.km):'—'},{label:'= Kr/km',val:c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}] : [];
-      const bdProvSav= c.breakdown?.provSav ? [{label:'Gammelt abo.+tillæg',val:H.fKr(c.oldWithE)},{label:'− Lev. pris',val:c.pv?H.fKr(c.pv.totalPrice):'—'},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Besparelse',val:provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—',cls:provSav!=null?(provSav>=0?'pos':'neg'):''}] : [];
+      const bdProvSav= c.pv ? [{label:'Gammelt abo.',val:H.fKr(c.oldSub)},{label:'− Lev. pris',val:H.fKr(c.pv.totalPrice)},{label:'= Besparelse',val:provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—',cls:provSav!=null?(provSav>=0?'pos':'neg'):''}] : [];
       const bdProvSavIA = c.pv ? [{label:'Gammelt abo.',val:H.fKr(c.oldSub)},{label:'− Lev. pris',val:H.fKr(c.pv.totalPrice)},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Reel besparelse',val:provSavInclAbo!=null?(provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo):'—',cls:provSavInclAbo!=null?(provSavInclAbo>=0?'pos':'neg'):''}] : [];
 
       h += `<tr class="${isCur?'cur':''} ${!hasData?'nd':''}">
