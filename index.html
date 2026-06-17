@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_03.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_04.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,7 +142,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .tip-b::before{content:'';position:absolute;bottom:100%;left:12px;border:5px solid transparent;border-bottom-color:rgba(79,142,247,.2);}
 
 /* CLOUD TIMESTAMPS */
-.cloud-ts{display:flex;flex-direction:column;gap:2px;font-size:.68rem;color:var(--muted);line-height:1.4;min-width:160px;}
+.srow.est-row{background:rgba(245,158,11,.05);border-left:2px solid var(--amber);}
+display:flex;flex-direction:column;gap:2px;font-size:.68rem;color:var(--muted);line-height:1.4;min-width:160px;}
 .cloud-ts .ts-row{display:flex;gap:5px;align-items:center;}
 .cloud-ts .ts-label{color:var(--muted);white-space:nowrap;}
 .cloud-ts .ts-val{font-family:monospace;color:var(--text);white-space:nowrap;}
@@ -186,7 +187,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_03</span></div>
+    <div class="hdr-sub">Genereret: 12. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_04</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -214,7 +215,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 <!-- MONTH NAV -->
 <div class="mon-nav">
   <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn data" title="Maj 2026">Maj</button><button class="m-btn active" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 12.06.2026</span>
+  <span class="today-lbl" id="todayLbl">I dag: 17.06.2026</span>
 </div>
 
 <!-- TABS -->
@@ -238,8 +239,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_03.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_03.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_04.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_04.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -1100,12 +1101,23 @@ const UI = {
       h += `<div class="slist">`;
       sess.forEach(s => {
         const rate = s.kwh>0 ? H.fRate(s.price/s.kwh) : '—';
-        h += `<div class="srow" id="sr-${s.id}">
+        const estK = s.estKwh || false;
+        const estP = s.estPrice || false;
+        const estRow = estK || estP;
+        h += `<div class="srow${estRow?' est-row':''}" id="sr-${s.id}">
           <span style="font-family:monospace;font-size:.78rem;color:var(--muted);min-width:85px">${H.fDate(s.date)}</span>
           <span class="tag ${s.location==='home'?'tag-h':'tag-p'}">${s.location==='home'?'HJEM':'OFF.'}</span>
-          <span style="font-family:monospace;font-weight:700">${H.fKwh(s.kwh)}</span>
-          <span style="font-family:monospace;color:var(--green)">${H.fKr(s.price)}</span>
+          <span style="font-family:monospace;font-weight:700;${estK?'color:var(--amber)':''}">${estK?'~':''}${H.fKwh(s.kwh)}${estK?' <span title="Estimat" style="font-size:.7rem">⚠</span>':''}</span>
+          <span style="font-family:monospace;${estP?'color:var(--amber)':'color:var(--green)'}">~${estP?'':''}${H.fKr(s.price)}${estP?' <span title="Estimat" style="font-size:.7rem">⚠</span>':''}</span>
           <span style="font-family:monospace;font-size:.75rem;color:var(--muted)">${rate}</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-left:4px">
+            <label style="display:inline-flex;align-items:center;gap:3px;cursor:pointer;font-size:.7rem;color:${estK?'var(--amber)':'var(--muted)'}">
+              <input type="checkbox" ${estK?'checked':''} onchange="App.toggleEst('${s.id}','kwh',this.checked)" style="width:13px;height:13px;cursor:pointer;accent-color:var(--amber)">kWh
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:3px;cursor:pointer;font-size:.7rem;color:${estP?'var(--amber)':'var(--muted)'}">
+              <input type="checkbox" ${estP?'checked':''} onchange="App.toggleEst('${s.id}','price',this.checked)" style="width:13px;height:13px;cursor:pointer;accent-color:var(--amber)">Pris
+            </label>
+          </div>
           <div class="acts">
             <button class="btn btn-g btn-sm" onclick="App.editSess('${s.id}')">✏</button>
             <button class="btn btn-d btn-sm" onclick="App.delSess('${s.id}')">✕</button>
@@ -1460,6 +1472,13 @@ const App = {
     UI.render();
   },
 
+  toggleEst(id, field, val) {
+    const s = D.sessions.find(x=>x.id===id); if(!s) return;
+    if (field==='kwh') s.estKwh = val;
+    if (field==='price') s.estPrice = val;
+    Store.save(); UI.render();
+  },
+
   addSess() {
     const day   = parseInt(document.getElementById('ns_d').value);
     const kwh   = H.pN(document.getElementById('ns_k').value);
@@ -1495,7 +1514,7 @@ const App = {
     s.date = s.date.slice(0,7)+'-'+H.pad(day);
     s.location = document.getElementById('ed_l_'+id).value;
     s.kwh   = H.pN(document.getElementById('ed_k_'+id).value)||0;
-e = H.pN(document.getElementById('ed_p_'+id).value)||0;
+    s.price = H.pN(document.getElementById('ed_p_'+id).value)||0;
     Store.save(); UI.render();
   },
 
