@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///C:/Users/Mads/Downloads/index_v07_05_1.html -->
+<!-- saved from url=(0049)file:///C:/Users/Mads/Downloads/index_v07_06.html -->
 <html lang="da"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -187,7 +187,7 @@ display:flex;flex-direction:column;gap:2px;font-size:.68rem;color:var(--muted);l
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 17. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_05</span></div>
+    <div class="hdr-sub">Genereret: 20. jun 2026 &nbsp;·&nbsp; <span class="ver">v07_06</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -215,7 +215,7 @@ display:flex;flex-direction:column;gap:2px;font-size:.68rem;color:var(--muted);l
 <!-- MONTH NAV -->
 <div class="mon-nav">
   <div id="monTabs"><button class="m-btn data" title="Januar 2026">Jan</button><button class="m-btn data" title="Februar 2026">Feb</button><button class="m-btn data" title="Marts 2026">Mar</button><button class="m-btn data" title="April 2026">Apr</button><button class="m-btn data" title="Maj 2026">Maj</button><button class="m-btn active" title="Juni 2026">Jun</button><button class="m-btn future" title="Juli 2026">Jul</button><button class="m-btn future" title="August 2026">Aug</button><button class="m-btn future" title="September 2026">Sep</button><button class="m-btn future" title="Oktober 2026">Okt</button><button class="m-btn future" title="November 2026">Nov</button><button class="m-btn future" title="December 2026">Dec</button></div>
-  <span class="today-lbl" id="todayLbl">I dag: 17.06.2026</span>
+  <span class="today-lbl" id="todayLbl">I dag: 20.06.2026</span>
 </div>
 
 <!-- TABS -->
@@ -239,8 +239,8 @@ display:flex;flex-direction:column;gap:2px;font-size:.68rem;color:var(--muted);l
         <div class="kpi-value c-pos">+750,00 kr</div>
         <div class="kpi-sub">✓ Spar vs. 799,00 kr/md</div>
       </div>
-      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_05_1.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
-      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_05_1.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.5"><div class="kpi-label">Pris pr. km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_06.html#" onclick="App.tab(&#39;odometer&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
+      <div class="kpi" style="opacity:.4"><div class="kpi-label">🧾 Reel betaling</div><div class="kpi-value" style="font-size:.85rem;color:var(--muted)">Ingen regning endnu</div><div class="kpi-sub"><a href="file:///C:/Users/Mads/Downloads/index_v07_06.html#" onclick="App.tab(&#39;provider&#39;);return false;" style="color:var(--accent)">→ Tilføj</a></div></div>
     </div></div><div class="card"><div class="card-title">📈 Besparelses-meter</div>
       <div style="display:flex;align-items:center;gap:14px">
         <span style="font-family:monospace;font-size:.7rem;color:var(--muted);min-width:45px">0 kr</span>
@@ -1069,12 +1069,23 @@ const UI = {
     let h = '';
 
     // Add form
+    const providerOpts = ['Clever','E.ON','Norlys','Ionity','Tesla','Circle K','Shell Recharge','Uno-X','OK','Q8','Allego','Zapp','Spirii','EWII','Andet...'];
     h += `<div class="card"><div class="card-title">➕ Registrér ladning — ${MDA[+curMon.split('-')[1]-1]}</div>
       <div class="frow">
         <div class="field"><label>Dag</label><input class="fi" type="text" inputmode="numeric" id="ns_d" value="${H.todayDay()}" maxlength="2" style="width:60px"></div>
         <div class="field"><label>kWh ladet</label><input class="fi" type="text" inputmode="decimal" id="ns_k" placeholder="35,5" style="width:85px"></div>
         <div class="field"><label>Pris (kr)</label><input class="fi" type="text" inputmode="decimal" id="ns_p" placeholder="87,50" style="width:95px"></div>
-        <div class="field"><label>Sted</label><select class="fs" id="ns_l" style="width:120px"><option value="home">🏠 Hjemme</option><option value="public">⚡ Offentlig</option></select></div>
+        <div class="field"><label>Sted</label><select class="fs" id="ns_l" style="width:120px" onchange="App.toggleProviderField()"><option value="home">🏠 Hjemme</option><option value="public">⚡ Offentlig</option></select></div>
+        <div class="field" id="ns_prov_wrap" style="display:none">
+          <label>Udbyder</label>
+          <select class="fs" id="ns_prov" style="width:130px" onchange="App.toggleProviderOther()">
+            ${providerOpts.map(p=>`<option value="${p}">${p}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field" id="ns_prov_other_wrap" style="display:none">
+          <label>Angiv udbyder</label>
+          <input class="fi" type="text" id="ns_prov_other" placeholder="Skriv navn..." style="width:130px">
+        </div>
         <div class="field" style="justify-content:flex-end"><button class="btn btn-p" onclick="App.addSess()">Tilføj</button></div>
       </div>
     </div>`;
@@ -1107,6 +1118,7 @@ const UI = {
         h += `<div class="srow${estRow?' est-row':''}" id="sr-${s.id}">
           <span style="font-family:monospace;font-size:.78rem;color:var(--muted);min-width:85px;flex-shrink:0">${H.fDate(s.date)}</span>
           <span class="tag ${s.location==='home'?'tag-h':'tag-p'}" style="flex-shrink:0">${s.location==='home'?'HJEM':'OFF.'}</span>
+          ${s.location==='public'?`<span style="color:var(--amber);font-size:.85rem;flex-shrink:0" title="${s.provider||'Offentlig'}">★${s.provider?' <span style="font-size:.7rem;color:var(--muted)">'+s.provider+'</span>':''}</span>`:''}
           <span style="font-family:monospace;font-weight:700;min-width:85px;flex-shrink:0;${estK?'color:var(--amber)':''}">${estK?'~':''}${H.fKwh(s.kwh)}${estK?' <span title="Estimat" style="font-size:.7rem">⚠</span>':''}</span>
           <span style="font-family:monospace;min-width:80px;flex-shrink:0;${estP?'color:var(--amber)':'color:var(--green)'}">${estP?'~':''}${H.fKr(s.price)}${estP?' <span title="Estimat" style="font-size:.7rem">⚠</span>':''}</span>
           <span style="font-family:monospace;font-size:.75rem;color:var(--muted);min-width:80px;flex-shrink:0">${rate}</span>
@@ -1295,7 +1307,20 @@ const UI = {
       const bdTotal  = c.breakdown ? [{label:'Lader',val:H.fKr(c.price)},{label:'+ Clever abo.',val:H.fKr(c.clever)},{label:'= Total',val:H.fKr(c.total)}] : [];
       const bdKrKm   = c.breakdown ? [{label:'Total',val:H.fKr(c.total)},{label:'÷ Km kørt',val:c.km!=null?H.fKm(c.km):'—'},{label:'= Kr/km',val:c.krKm!=null?c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}] : [];
       const bdProvSav= c.pv ? [{label:'Gammelt abo.',val:H.fKr(c.oldSub)},{label:'− Lev. pris',val:H.fKr(c.pv.totalPrice)},{label:'= Besparelse',val:provSav!=null?(provSav>=0?'+':'')+H.fKr(provSav):'—',cls:provSav!=null?(provSav>=0?'pos':'neg'):''}] : [];
-      const bdProvSavIA = c.pv ? [{label:'Gammelt abo.',val:H.fKr(c.oldSub)},{label:'− Lev. pris',val:H.fKr(c.pv.totalPrice)},{label:'− Clever abo.',val:H.fKr(c.clever)},{label:'= Reel besparelse',val:provSavInclAbo!=null?(provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo):'—',cls:provSavInclAbo!=null?(provSavInclAbo>=0?'pos':'neg'):''}] : [];
+      // Offentlig ladning denne måned?
+      const pubSess = Calc.sess(c.ym).filter(s=>s.location==='public');
+      const hasPub = pubSess.length > 0;
+      const pubPrice = pubSess.reduce((a,s)=>a+(s.price||0),0);
+      const homPrice = Calc.sess(c.ym).filter(s=>s.location!=='public').reduce((a,s)=>a+(s.price||0),0);
+      const pubProviders = [...new Set(pubSess.map(s=>s.provider).filter(Boolean))].join(', ');
+
+      const bdProvSavIA = c.pv ? [
+        {label:'Gammelt abo.',val:H.fKr(c.oldSub)},
+        ...(homPrice>0?[{label:'− Lev. pris (hjemme)',val:'−'+H.fKr(homPrice)}]:[]),
+        ...(pubPrice>0?[{label:`− Lev. pris (off.★${pubProviders?' '+pubProviders:''})`,val:'−'+H.fKr(pubPrice),cls:'warn'}]:[]),
+        {label:'− Clever abo.',val:'−'+H.fKr(c.clever)},
+        {label:'= Reel besparelse',val:provSavInclAbo!=null?(provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo):'—',cls:provSavInclAbo!=null?(provSavInclAbo>=0?'pos':'neg'):''}
+      ] : [];
 
       h += `<tr class="${isCur?'cur':''} ${!hasData?'nd':''}">
         <td><strong>${mon}</strong>${isH?' <span style="font-size:.6rem;color:var(--muted)">(h)</span>':''}</td>
@@ -1310,7 +1335,7 @@ const UI = {
         <td>${c.pv?H.fKr(c.pv.totalPrice):'—'}</td>
         <td>${provKmCost!=null?provKmCost.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':'—'}</td>
         <td class="${provSav!=null?(provSav>=0?'c-pos':'c-neg'):''}">${provSav!=null?cv((provSav>=0?'+':'')+H.fKr(provSav),bdProvSav,provSav>=0?'':'c-neg')+runProvSavTxt:'—'}</td>
-        <td class="${provSavInclAbo!=null?(provSavInclAbo>=0?'c-pos':'c-neg'):''}">${provSavInclAbo!=null?cv((provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo),bdProvSavIA,provSavInclAbo>=0?'':'c-neg')+runProvSavIATxt:'—'}</td>
+        <td class="${provSavInclAbo!=null?(provSavInclAbo>=0?'c-pos':'c-neg'):''}">${provSavInclAbo!=null?cv((provSavInclAbo>=0?'+':'')+H.fKr(provSavInclAbo),bdProvSavIA,provSavInclAbo>=0?'':'c-neg')+(hasPub?` <span style="color:var(--amber);font-size:.75rem" title="Indeholder offentlig ladning">★</span>`:'')+runProvSavIATxt:'—'}</td>
       </tr>`;
     });
 
@@ -1472,6 +1497,17 @@ const App = {
     UI.render();
   },
 
+  toggleProviderField() {
+    const loc = document.getElementById('ns_l').value;
+    document.getElementById('ns_prov_wrap').style.display = loc==='public' ? '' : 'none';
+    document.getElementById('ns_prov_other_wrap').style.display = 'none';
+  },
+
+  toggleProviderOther() {
+    const prov = document.getElementById('ns_prov').value;
+    document.getElementById('ns_prov_other_wrap').style.display = prov==='Andet...' ? '' : 'none';
+  },
+
   toggleEst(id, field, val) {
     const s = D.sessions.find(x=>x.id===id); if(!s) return;
     if (field==='kwh') s.estKwh = val;
@@ -1486,7 +1522,16 @@ const App = {
     const loc   = document.getElementById('ns_l').value;
     if (isNaN(day)||day<1||day>31) { alert('Ugyldig dag (1-31)'); return; }
     if (isNaN(kwh)) { alert('Udfyld kWh'); return; }
-    D.sessions.push({ id:Date.now().toString(), date:`${curMon}-${H.pad(day)}`, kwh, price:isNaN(price)?0:price, location:loc });
+    let provider = null;
+    if (loc === 'public') {
+      const provEl = document.getElementById('ns_prov');
+      provider = provEl ? provEl.value : null;
+      if (provider === 'Andet...') {
+        const otherEl = document.getElementById('ns_prov_other');
+        provider = otherEl && otherEl.value.trim() ? otherEl.value.trim() : 'Anden';
+      }
+    }
+    D.sessions.push({ id:Date.now().toString(), date:`${curMon}-${H.pad(day)}`, kwh, price:isNaN(price)?0:price, location:loc, provider });
     Store.save(); UI.render();
   },
 
