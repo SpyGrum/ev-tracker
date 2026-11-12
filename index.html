@@ -193,7 +193,7 @@ details.arch[open]>summary{margin-bottom:6px;}
 <header class="hdr">
   <div>
     <div class="hdr-logo">⚡ EV Forbrug Tracker</div>
-    <div class="hdr-sub">Genereret: 12. nov 2026 &nbsp;·&nbsp; <span class="ver">v11_01</span></div>
+    <div class="hdr-sub">Genereret: 12. nov 2026 &nbsp;·&nbsp; <span class="ver">v11_02</span></div>
   </div>
   <div class="hdr-right">
     <span id="saveStatus" style="font-size:.72rem;color:var(--muted)"></span>
@@ -793,7 +793,7 @@ const Calc = {
     const clever    = getClever(ym);
     const oldSub    = getOldSub(ym);
     const eRate     = (D.energitillaeg||{})[ym] || 0;
-    const eKr       = eRate * kWh;
+    const eKr       = eRate * cleverKwh;   // Clevers tillæg gælder kun Clever-kWh (hjemme + Clever offentlig)
     const oldWithE  = oldSub + eKr;
     const pv        = D.provider[ym] || null;
     const reel      = pv ? oldWithE - pv.totalPrice - udeKr - clever : null;
@@ -802,11 +802,12 @@ const Calc = {
     let km=null, krKm=null;
     const s0 = this.firstKm(ym), e0 = this.firstKm(this.nextYm(ym));
     if (s0!=null && e0!=null) km = e0 - s0;
-    if (pv && km!=null && km>0) krKm = total / km;
+    let krKmOld = null;
+    if (pv && km!=null && km>0) { krKm = total / km; krKmOld = oldWithE / km; }
 
     const provDiff = pv ? { kwhDiff: kWh - pv.totalKwh } : null;
     return { kWh, cleverKwh, udeKwhAdd, udeKr, pubSess, n: pubSess.length,
-             clever, oldSub, eRate, eKr, oldWithE, eSet: (D.energitillaeg||{})[ym]!==undefined, pv, reel, savings: reel, total, km, krKm, provDiff,
+             clever, oldSub, eRate, eKr, oldWithE, eSet: (D.energitillaeg||{})[ym]!==undefined, pv, reel, savings: reel, total, km, krKm, krKmOld, provDiff,
              hasMonthly: D.monthly[ym]!=null, migrated: !!mt.migrated };
   },
 };
@@ -834,11 +835,13 @@ const UI = {
     const years = new Set([curYear]);
     D.sessions.forEach(s=>years.add(s.date.slice(0,4)));
     Object.keys(D.historical).forEach(k=>years.add(k.slice(0,4)));
+    Object.keys(D.monthly||{}).forEach(k=>years.add(k.slice(0,4)));
+    Object.keys(D.provider||{}).forEach(k=>years.add(k.slice(0,4)));
     D.odometer.forEach(o=>years.add(o.month.slice(0,4)));
     const el = document.getElementById('yearTabs');
     el.innerHTML = '';
     [...years].sort().forEach(y => {
-      const hasData = D.sessions.some(s=>s.date.startsWith(y));
+      const hasData = D.sessions.some(s=>s.date.startsWith(y)) || Object.keys(D.monthly||{}).some(k=>k.startsWith(y)) || Object.keys(D.provider||{}).some(k=>k.startsWith(y));
       const b = document.createElement('button');
       b.className = 'y-btn' + (y===curYear?' active':'') + (hasData&&y!==curYear?' data':'');
       b.textContent = y;
@@ -1009,7 +1012,7 @@ const UI = {
       ${c.km!=null
         ?`<div class="kpi"><div class="kpi-label">Kørte km</div><div class="kpi-value cn">${H.fKm(c.km)}</div><div class="kpi-sub">denne måned</div></div>`
         :`<div class="kpi" style="opacity:.5"><div class="kpi-label">Kørte km</div><div class="kpi-value" style="font-size:.9rem;color:var(--muted)">Mangler km-stand</div><div class="kpi-sub"><a href="#" onclick="App.tab('odometer');return false;" style="color:var(--accent)">Tast km-stand →</a></div></div>`}
-      ${c.krKm!=null?`<div class="kpi"><div class="kpi-label">Pris pr. km</div><div class="kpi-value">${c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})} kr</div><div class="kpi-sub">lev. + ude + abo.</div></div>`:''}
+      ${c.krKm!=null?`<div class="kpi"><div class="kpi-label">Pris pr. km</div><div class="kpi-value">${c.krKm.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})} kr</div><div class="kpi-sub">lev. + ude + abo.${c.krKmOld!=null?' · gammelt abo.: '+c.krKmOld.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr':''}</div></div>`:''}
     </div></div>`;
 
     if (c.pv) {
@@ -1140,11 +1143,11 @@ const UI = {
     // Energitillæg
     const eRate = (D.energitillaeg||{})[curMon]||0;
     h += `<div class="card"><div class="card-title">⚡ Clever energitillæg — ${monName} ${curYear}
-      <span class="tip" style="margin-left:4px"><span class="tip-i">i</span><span class="tip-b">Tastes når måneden er afsluttet. Satsen × total kWh lægges oveni gammelt abo. i besparelsen. Ingen tillæg? Skriv 0.</span></span>
+      <span class="tip" style="margin-left:4px"><span class="tip-i">i</span><span class="tip-b">Tastes når måneden er afsluttet. Satsen × Clever-kWh (hjemme + Clever offentlig) lægges oveni gammelt abo. i besparelsen. Ingen tillæg? Skriv 0.</span></span>
     </div>
       <div class="frow" style="align-items:flex-end">
         <div class="field"><label>⚡ Energitillæg (kr/kWh)</label><input class="fi" type="text" inputmode="decimal" id="enrg" value="${(D.energitillaeg||{})[curMon]!==undefined?String(eRate).replace('.',','):''}" placeholder="0" style="width:110px"></div>
-        ${c.kWh>0&&eRate>0?`<div style="font-size:.8rem;color:var(--muted);padding-bottom:8px">${H.fRate(eRate)} × ${H.fKwh(c.kWh)} = <strong style="color:var(--amber)">${H.fKr(c.eKr)}</strong> lægges oveni gammelt abo.</div>`:''}
+        ${c.cleverKwh>0&&eRate>0?`<div style="font-size:.8rem;color:var(--muted);padding-bottom:8px">${H.fRate(eRate)} × ${H.fKwh(c.cleverKwh)} = <strong style="color:var(--amber)">${H.fKr(c.eKr)}</strong> lægges oveni gammelt abo.</div>`:''}
         <div class="field" style="justify-content:flex-end"><button class="btn btn-g" onclick="App.saveEnergi()">Gem</button></div>
       </div>
     </div>`;
@@ -1260,6 +1263,9 @@ const UI = {
     const noE          = calcs.filter(c=>c.pv && !c.eSet).map(c=>SHORT[+c.ym.split('-')[1]-1]);
     const totKwh       = calcs.reduce((a,c)=>a+c.kWh,0);
     const totKm        = calcs.reduce((a,c)=>a+(c.km||0),0);
+    const kmRows       = calcs.filter(c=>c.pv && c.krKm!=null);
+    const avgKrKm      = kmRows.length ? kmRows.reduce((a,c)=>a+c.total,0)/kmRows.reduce((a,c)=>a+c.km,0) : null;
+    const fk = n => n.toLocaleString('da-DK',{minimumFractionDigits:2,maximumFractionDigits:2})+' kr';
     const unchecked    = calcs.filter(c=>c.migrated).length;
     const sgn = n => (n>=0?'+':'')+H.fKr(n);
     const dm  = s => H.fDate(s.date).slice(0,5);
@@ -1277,11 +1283,12 @@ const UI = {
     <table class="ytbl"><thead><tr>
       <th>Md.</th>
       <th ${thA}><span class="tip">Total kWh<span class="tip-i">i</span><span class="tip-b">Clever-total + kWh fra ladning ude i byen (Clever offentlig ligger allerede i totalen).</span></span></th>
-      <th ${thS}><span class="tip">Energitillæg<span class="tip-i">i</span><span class="tip-b">Clever energitillæg × total kWh. Lægges oveni gammelt abo. i besparelsen.</span></span></th>
+      <th ${thS}><span class="tip">Energitillæg<span class="tip-i">i</span><span class="tip-b">Clever energitillæg × Clever-kWh (hjemme + Clever offentlig). Lægges oveni gammelt abo. i besparelsen.</span></span></th>
       <th ${thS}>Ude ★</th>
       <th ${thR}><span class="tip">Lev. kWh<span class="tip-i">i</span><span class="tip-b">kWh fra leverandørens regning — hjemmeladning.</span></span></th>
       <th ${thR}><span class="tip">Lev. pris<span class="tip-i">i</span><span class="tip-b">Reelt betalt til leverandør — efter solcelle-fradrag.</span></span></th>
       <th ${thS}>Km kørt</th>
+      <th ${thR}><span class="tip">Kr/km<span class="tip-i">i</span><span class="tip-b">Reel pris pr. kørt km = (lev. pris + ude ★ + Clever abo.) ÷ km kørt.</span></span></th>
       <th ${thR}><span class="tip">Reel besparelse<span class="tip-i">i</span><span class="tip-b">Gammelt abo. + energitillæg − lev. pris − ude ★ − Clever abo. Hold musen over / tryk på tallet for regnestykket.</span></span></th>
     </tr></thead><tbody>`;
 
@@ -1309,7 +1316,7 @@ const UI = {
 
       const bdE = [
         {label:'Sats',val:H.fRate(c.eRate)},
-        {label:'× Total kWh',val:H.fKwh(c.kWh)},
+        {label:'× Clever kWh',val:H.fKwh(c.cleverKwh)},
         {label:'= Energitillæg',val:H.fKr(c.eKr)}
       ];
 
@@ -1317,7 +1324,7 @@ const UI = {
       if (c.pv) {
         bdReel = [
           {label:'Gammelt abo.',val:H.fKr(c.oldSub)},
-          ...(c.eKr>0?[{label:`+ Energitillæg (${H.fRate(c.eRate)} × ${H.fKwh(c.kWh)})`,val:'+'+H.fKr(c.eKr)}]:[]),
+          ...(c.eKr>0?[{label:`+ Energitillæg (${H.fRate(c.eRate)} × ${H.fKwh(c.cleverKwh)})`,val:'+'+H.fKr(c.eKr)}]:[]),
           {label:'− Lev. pris (hjemme)',val:'−'+H.fKr(c.pv.totalPrice)},
           ...c.pubSess.map(s=>({label:`− ★ ${s.provider||'Offentlig'}, ${dm(s)}`, val:'−'+H.fKr(s.price), cls:'warn'})),
           {label:'− Clever abo.',val:'−'+H.fKr(c.clever)},
@@ -1326,6 +1333,16 @@ const UI = {
         ];
         runReel += c.reel;
       }
+
+      const bdKm = (c.pv && c.krKm!=null) ? [
+        {label:'Lev. pris (hjemme)',val:H.fKr(c.pv.totalPrice)},
+        ...(c.udeKr>0?[{label:'+ ★ Ude i byen',val:H.fKr(c.udeKr),cls:'warn'}]:[]),
+        {label:'+ Clever abo.',val:H.fKr(c.clever)},
+        {label:'= Samlet udgift',val:H.fKr(c.total)},
+        {label:'÷ Km kørt',val:H.fKm(c.km)},
+        {label:'= Pris pr. km',val:fk(c.krKm),cls:'pos'},
+        {label:'Gammelt abo. + tillæg ville give',val:fk(c.krKmOld)+'/km'}
+      ] : [];
 
       const reelCell = c.pv
         ? cv(sgn(c.reel), bdReel, c.reel>=0?'':'c-neg', 'Reel besparelse')
@@ -1341,6 +1358,7 @@ const UI = {
         <td>${c.pv?`<span class="cg">${H.fKwh(c.pv.totalKwh)}</span>`:'—'}</td>
         <td>${c.pv?H.fKr(c.pv.totalPrice):'—'}</td>
         <td>${c.km!=null?`<span class="cn">${H.fKm(c.km)}</span>`:'—'}</td>
+        <td>${c.krKm!=null?cv(fk(c.krKm),bdKm,'','Pris pr. km'):'—'}</td>
         <td class="${c.pv?(c.reel>=0?'c-pos':'c-neg'):''}">${reelCell}</td>
       </tr>`;
     });
@@ -1353,9 +1371,10 @@ const UI = {
       <td class="cg">${totProvKwh>0?H.fKwh(totProvKwh):'—'}</td>
       <td>${totProvPrice>0?H.fKr(totProvPrice):'—'}</td>
       <td>${totKm>0?H.fKm(totKm):'—'}</td>
+      <td>${avgKrKm!=null?fk(avgKrKm):'—'}</td>
       <td class="${totReel>=0?'c-pos':'c-neg'}">${withPv.length?sgn(totReel):'—'}</td>
     </tr></tfoot></table></div>
-    <div style="font-size:.72rem;color:var(--muted);margin-top:10px">Reel besparelse = gammelt abo. + energitillæg − lev. pris − ude ★ − Clever abo. Hold musen over (eller tryk på) et tal for regnestykket. Tryk på en måned for at gå til den.${noE.length?` <span style="color:var(--amber)">⚠ Energitillæg mangler for ${noE.join(', ')} — tast satsen under Ladninger (skriv 0, hvis der ingen er).</span>`:''}${unchecked?` <span style="color:var(--amber)">⚠ ${unchecked} måned${unchecked!==1?'er':''} med tal overført fra gamle ladninger — skal tjekkes.</span>`:''}</div></div>`;
+    <div style="font-size:.72rem;color:var(--muted);margin-top:10px">Reel besparelse = gammelt abo. + energitillæg − lev. pris − ude ★ − Clever abo. Kr/km = (lev. pris + ude ★ + Clever abo.) ÷ km kørt. Hold musen over (eller tryk på) et tal for regnestykket. Tryk på en måned for at gå til den.${noE.length?` <span style="color:var(--amber)">⚠ Energitillæg mangler for ${noE.join(', ')} — tast satsen under Ladninger (skriv 0, hvis der ingen er).</span>`:''}${unchecked?` <span style="color:var(--amber)">⚠ ${unchecked} måned${unchecked!==1?'er':''} med tal overført fra gamle ladninger — skal tjekkes.</span>`:''}</div></div>`;
 
     return h;
   },
